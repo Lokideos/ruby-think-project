@@ -1,2 +1,2 @@
-Welcome to first file in this repo!
+Welcome to the first file in this repo!
 And thank you for your efforts!
