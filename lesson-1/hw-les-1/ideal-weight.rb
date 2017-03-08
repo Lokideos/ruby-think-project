@@ -8,20 +8,22 @@ or, if the result < 0, user will recieve the following output:
 "Your weight is already in optimal condition."
 =end
 
-flag_program_exit = false
+program_exit = false
 
-while flag_program_exit == false
+while !program_exit
+
 
 	#Initialize
 	puts "Greetings! This programm will calculate your ideal weight!"
 	print "First please type in your name: "
 	user_name = gets.chomp
 	print "Now please type in your height: "
-	user_height = Integer(gets.chomp)
+	user_height = gets.chomp.to_i
+	ideal_weight = user_height - 110
 
 	#Calculate ideal weight and print out the result
-	if (user_height - 110) > 0
-		puts "According to our research your ideal weight is equal to #{user_height - 110}"
+	if ideal_weight > 0
+		puts "According to our research your ideal weight is equal to #{ideal_weight}"
 	else
 		puts "Congratulations! Your weight is already optimal!"
 	end
@@ -31,5 +33,5 @@ while flag_program_exit == false
 	puts "If you want to exit the program please type in 'Exit'."
 	puts "Otherwise type in whatever you want to."
 	exit_check = gets.chomp.capitalize!
-	flag_program_exit = true if exit_check == "Exit"
+	program_exit = true	if exit_check == "Exit"
 end

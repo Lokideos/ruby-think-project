@@ -8,9 +8,9 @@ It was uncleaar whether we should check for equilateral condition or not,
 so I didnd't do it.
 =end
 
-flag_program_exit = false
+program_exit = false
 
-while flag_program_exit == false
+while !program_exit
 
 	#Initialize
 	puts "Greetings! According to provided information this program"
@@ -21,45 +21,45 @@ while flag_program_exit == false
 
 	puts "First please type in length of trinagle's sides."
 	print "Please type in length of triangle's first side in centimeters: "
-	first_side_length = Float(gets.chomp)
+	first_side = gets.chomp.to_f
 	print "Please type in length of triangle's second side in centimeters: "
-	second_side_length = Float(gets.chomp)
+	second_side = gets.chomp.to_f
 	print "Please type in length of triangle's third side in centimeters: "
-	third_side_length = Float(gets.chomp)
-	flag_right_triangle = false
-	flag_isosceles_triangle = false
-
-	#Check for the longest triangle's side and right triangle's condition 
-	if (first_side_length > second_side_length) && (first_side_length > third_side_length)
-		if first_side_length == Math.sqrt(second_side_length**2 + third_side_length**2)		
-			flag_right_triangle = true 			
-		end
-	elsif second_side_length > third_side_length
-		if second_side_length == Math.sqrt(first_side_length**2 + third_side_length**2)
-			flag_right_triangle = true 	
-		end	
+	third_side = gets.chomp.to_f
+	right_triangle = false
+	isosceles_triangle = false
+	
+	#Check for the longest triangle's side
+	if first_side > second_side && first_side > third_side
+		hypotenuse = first_side
+		cathetus1 = second_side
+		cathetus2 = third_side
+	elsif second_side > third_side
+		hypotenuse = second_side
+		cathetus1 = first_side
+		cathetus2 = third_side
 	else
-		if third_side_length == Math.sqrt(first_side_length**2 + second_side_length**2)
-			flag_right_triangle = true	
-		end	
+		hypotenuse = third_side
+		cathetus1 = first_side
+		cathetus2 = second_side
 	end
 	
+	#Check for right triangle's condition
+	right_triangle = true if hypotenuse == Math.sqrt(cathetus1**2 + cathetus2**2)
+	
 	#Check for isosceles triange's condition	
-	if flag_right_triangle == true
+	if right_triangle
 		#Is this kind of conditions' representation is acceptable?
-		if (first_side_length == second_side_length) || 
-			(first_side_length == third_side_length) || 
-			(second_side_length == third_side_length)
-
-			flag_isosceles_triangle = trus
+		if cathetus1 == cathetus2
+			isosceles_triangle = true
 		end
 	end
 	
 	#Print results acording to isosceles and right conditions
-	if flag_isosceles_triangle == true
+	if isosceles_triangle
 		puts "According to provided information about triangle sides' length,"
 		puts "your triangle is right and also isosceles."
-	elsif flag_right_triangle == true
+	elsif right_triangle
 		puts "According to provided information about triangle sides' length,"
 		puts "your triangle is right."		
 	else
@@ -72,5 +72,5 @@ while flag_program_exit == false
 	puts "If you want to exit the program please type in 'Exit'."
 	puts "Otherwise type in whatever you want to."
 	exit_check = gets.chomp.capitalize!
-	flag_program_exit = true if exit_check == "Exit"
+	program_exit = true if exit_check == "Exit"
 end
