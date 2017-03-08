@@ -26,7 +26,8 @@ while flag_program_exit == false
 		puts "Congratulations! Your weight is already optimal!"
 	end
 	
-	#Check for exit the string
+	#Check for exit program condition
+	puts
 	puts "If you want to exit the program please type in 'Exit'."
 	puts "Otherwise type in whatever you want to."
 	exit_check = gets.chomp.capitalize!

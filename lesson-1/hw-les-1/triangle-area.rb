@@ -24,6 +24,7 @@ while flag_program_exit == false
 	puts "The area of this triangle is equal to #{triangle_side*triangle_height*0.5}";
 
 	#Check for exit program condition
+	puts
 	puts "If you want to exit the program please type in 'Exit'."
 	puts "Otherwise type in whatever you want to."
 	exit_check = gets.chomp.capitalize!

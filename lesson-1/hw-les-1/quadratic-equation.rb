@@ -38,8 +38,7 @@ while flag_program_exit == false
 		puts " therefore there are no roots for this equation"
 	end		
 
-	#Check for exit program condition
-	
+	#Check for exit program condition	
 	puts
 	puts "If you want to exit the program please type in 'Exit'."
 	puts "Otherwise type in whatever you want to."

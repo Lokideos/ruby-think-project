@@ -4,6 +4,8 @@ Program "Right triangle"
 According to user input, which is length of triangle's 3 sides,
 this program will detect whether this triangle is right or not using Pythagorean theorem.
 In addition program will also detect whether this triangle is isosceles or not.
+It was uncleaar whether we should check for equilateral condition or not,
+so I didnd't do it.
 =end
 
 flag_program_exit = false
@@ -42,13 +44,15 @@ while flag_program_exit == false
 		end	
 	end
 	
-	#Check for isosceles triange's condition
+	#Check for isosceles triange's condition	
 	if flag_right_triangle == true
-		flag_isosceles_triangle = true if first_side_length == second_side_length		
-	elsif first_side_length == third_side_length
-		flag_isosceles_triangle = true
-	elsif second_side_length == third_side_length
-		flag_isosceles_triangle = true
+		#Is this kind of conditions' representation is acceptable?
+		if (first_side_length == second_side_length) || 
+			(first_side_length == third_side_length) || 
+			(second_side_length == third_side_length)
+
+			flag_isosceles_triangle = trus
+		end
 	end
 	
 	#Print results acording to isosceles and right conditions
@@ -58,9 +62,13 @@ while flag_program_exit == false
 	elsif flag_right_triangle == true
 		puts "According to provided information about triangle sides' length,"
 		puts "your triangle is right."		
+	else
+		puts "According to provided information your triangle is"
+		puts "definetly not right."
 	end
 
 	#Check for exit program condition
+	puts
 	puts "If you want to exit the program please type in 'Exit'."
 	puts "Otherwise type in whatever you want to."
 	exit_check = gets.chomp.capitalize!
