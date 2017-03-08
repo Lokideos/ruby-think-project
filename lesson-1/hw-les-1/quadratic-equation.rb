@@ -33,9 +33,10 @@ while flag_program_exit == false
 	if d > 0
 		puts ", x1 is equal to #{-b + Math.sqrt(d)} and x2 is equal to #{-b - Math.sqrt(d)}";		
 	elsif d == 0
-		puts ", x is equal to #{-b/2/a}"		
+		puts ", x is equal to #{-b/2/a} and its the only one root."		
 	else
-		puts " therefore there are no roots for this equation"
+		puts " therefore there are no roots for this equation."
+		puts "But frankly speaking it's not quite true."
 	end		
 
 	#Check for exit program condition	
