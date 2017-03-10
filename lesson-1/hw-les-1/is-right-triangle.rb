@@ -28,6 +28,7 @@ until exit_check == "exit"
   third_side = gets.chomp.to_f
   right_triangle = false
   isosceles_triangle = false
+  equilateral_triangle = false
   
   #Check for the longest triangle's side
   if first_side > second_side && first_side > third_side
@@ -50,6 +51,9 @@ until exit_check == "exit"
   #Check for isosceles triange's condition    
   isosceles_triangle = cathetus1 == cathetus2 if right_triangle  
   
+  #Check for equilateral triangle's condition
+  equilateral_triangle = first_side == second_side && first_side == third_side
+  
   #Print results acording to isosceles and right conditions
   if isosceles_triangle
     puts "According to provided information about triangle sides' length,"
@@ -57,6 +61,9 @@ until exit_check == "exit"
   elsif right_triangle
     puts "According to provided information about triangle sides' length,"
     puts "your triangle is right."    
+  elsif equilateral_triangle
+    puts "According to provided information about triangle sides' length,"
+    puts "your triangle is equilateral."
   else
     puts "According to provided information your triangle is"
     puts "definetly not right."
