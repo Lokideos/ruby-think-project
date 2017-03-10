@@ -33,7 +33,7 @@ until exit_check == "exit"
   print "The discriminant is equal to #{d}";
   if d > 0
     d_sqrt = Math.sqrt(d)
-    puts ", x1 is equal to #{-b + d_sqrt} and x2 is equal to #{-b - d_sqrt}";   
+    puts ", x1 is equal to #{(-b + d_sqrt)/2/a} and x2 is equal to #{(-b - d_sqrt)/2/a}";   
   elsif d == 0
     puts ", x is equal to #{-b/2/a} and its the only one root."   
   else
