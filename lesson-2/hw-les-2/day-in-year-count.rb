@@ -16,25 +16,19 @@ until exit_check == "exit"
   print "Please type in current year: "
   year = gets.chomp.to_i
   print "Please type in current month: "
-  month = gets.chomp.to_i - 1
+  month = gets.chomp.to_i
   print "Please type in current day: "
   days = gets.chomp.to_i  
-  months = {january: {1=>31}, february: {2=>28}, march: {3=>31}, 
-            april: {4=>30}, may: {5=>31}, june: {6=>30},
-            july: {7=>31}, august: {8=>31}, september: {9=>30}, 
-            october: {10=>31}, november: {11=>30}, december: {12=>31}}
+  
+  months = [31,28,31,30,31,30,31,31,30,31,30,31]
 
   #Detection of leap year
-  months[:february][2] = 29 if year % 4 == 0 && year % 100 != 0 || year % 400 == 0
+  months[1] = 29 if year % 4 == 0 && year % 100 != 0 || year % 400 == 0
   
   #Calculating sum of days from the beginning of the year
-  months.each do |month_name, property|
-    property.each do |month_count, day_count|
-      if month_count <= month
-        days += day_count
-      end
-    end
-  end
+  for month_count in 0...month-1
+    days += months[month_count]
+  end  
 
   puts "According to your data there are #{days} days between the beginning of the year"
   puts "and current date."

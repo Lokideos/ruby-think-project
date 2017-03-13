@@ -20,11 +20,9 @@ until exit_check == "exit"
             october: 31, november: 30, december: 31}
 
   #Print needed months
-  output = "There are 30 days in the following months:"
-  months.each {|month, days| output += " #{month}," if days == 30}
-  output[-1] = "."
-  puts output
-
+  output = []
+  months.each {|month, days| output << month if days == 30}
+  puts "There are 30 days in the following months: #{output.join(', ')}."
 
   #Check for exit program condition
   puts

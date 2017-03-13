@@ -19,35 +19,33 @@ until exit_check == "exit"
   puts "As a result you will recieve total amount, amount for each product,"
   puts "and hash containing data about purchased products."
   puts
-  total_purchase = Hash.new
+  cart = {}
   total_amount = 0
-  product_name = ""
+  name = ""
 
-  #Filling shopping cart
-  until product_name == "stop" do
+  #Filling shopping cart  
+  loop do
     puts "Type in product name."
-    product_name = gets.chomp  
-    if product_name != "stop"
-      total_purchase[product_name] = {:price => 0.0, :quantity => 0.0, 
-                                                      :product_amount => 0.0}
-      puts "Type in product price"  
-      product_price = gets.chomp.to_f
-      total_purchase[product_name][:price] = product_price
-      puts "Type in product quantity."
-      product_quantity = gets.chomp.to_f
-      total_purchase[product_name][:quantity] = product_quantity
-      total_purchase[product_name][:product_amount] = product_quantity * product_price
-      total_amount += total_purchase[product_name][:product_amount]
-    end
+    name = gets.chomp
+    break if name == "stop"
+    cart[name] = {}
+    puts "Type in product price"  
+    price = gets.chomp.to_f
+    cart[name][:price] = price
+    puts "Type in product quantity."
+    quantity = gets.chomp.to_f
+    cart[name][:quantity] = quantity
+    cart[name][:amount] = quantity * price
+    total_amount += cart[name][:amount]    
   end
 
   #Printing the output
   puts
   puts "Hash containing data about your purchase looks like following hash:"
-  puts total_purchase
+  puts cart
   puts "As per amount for each products please refer to the information below."
-  total_purchase.each do |product, properties|
-    puts "Total price of #{product} is #{properties[:product_amount]}"   
+  cart.each do |name, product|
+    puts "Total price of #{name} is #{product[:amount]}"   
   end
   puts "The total amount for your purchase is #{total_amount}."
 

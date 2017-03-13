@@ -16,7 +16,7 @@ until exit_check == "exit"
   number = 10
   #Filling an array with numbers
   until number > 100
-    numbers.push(number)
+    numbers << number
     number += 5
   end
 

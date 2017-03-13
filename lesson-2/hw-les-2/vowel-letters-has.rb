@@ -13,13 +13,15 @@ until exit_check == "exit"
   puts "Greetings! This programm will form hash containing vowels letters"
   puts "and their index in the alphabet."
   letters = ('a'..'z').to_a
-  vowels = Hash.new
+  vowels = {}
+  letter_num = 0
 
-  #Fill the hash with vowels and their indexes
-  for index in 0..letters.length
-    if !(letters[index] =~ /[aeiouy]/).nil?
-      key = letters[index].to_sym
-      vowels[key] = index + 1
+  #Fill the hash with vowels and their indexes 
+  letters.each do |letter|
+    letter_num += 1
+    unless (letter =~ /[aeiouy]/).nil?
+      key = letter.to_sym
+      vowels[key] = letter_num
     end
   end
 
