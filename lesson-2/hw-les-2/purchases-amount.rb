@@ -25,17 +25,18 @@ until exit_check == "exit"
 
   #Filling shopping cart  
   loop do
-    puts "Type in product name."
+    #Get the values
+    puts "Type in product name"
     name = gets.chomp
-    break if name == "stop"
-    cart[name] = {}
+    break if name == "stop" 
+    
     puts "Type in product price"  
-    price = gets.chomp.to_f
-    cart[name][:price] = price
-    puts "Type in product quantity."
+    price = gets.chomp.to_f    
+    puts "Type in product quantity"
     quantity = gets.chomp.to_f
-    cart[name][:quantity] = quantity
-    cart[name][:amount] = quantity * price
+    
+    #Assign values to the cart properties
+    cart[name] = {price: price, quantity: quantity, amount: quantity*price}
     total_amount += cart[name][:amount]    
   end
 
