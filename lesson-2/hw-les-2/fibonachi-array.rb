@@ -10,12 +10,11 @@ until exit_check == "exit"
 
   #Initialize
   puts "Greetings! This program will create an array containing Fibonachi numbers less then 100."
-  fibonachi = [1,1]
-  f_index = 2  
+  fibonachi = [1,1]  
 
   #Filling array with fibonachi numbers and deleting last element
-  while fibonachi[-2] + fibonachi[-1] < 100 do
-    fibonachi << fibonachi[-2] + fibonachi[-1]
+  while (condition = fibonachi[-2] + fibonachi[-1]) < 100 do
+    fibonachi << condition
   end
   
 
