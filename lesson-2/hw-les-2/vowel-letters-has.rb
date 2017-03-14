@@ -19,7 +19,7 @@ until exit_check == "exit"
   letters.each.with_index do |letter, index|    
     unless (letter =~ /[aeiouy]/).nil?
       key = letter.to_sym
-      vowels[key] = index
+      vowels[key] = index + 1
     end
   end
 
