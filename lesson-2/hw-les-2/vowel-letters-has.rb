@@ -16,10 +16,10 @@ until exit_check == "exit"
   vowels = {}  
 
   #Fill the hash with vowels and their indexes 
-  letters.each.with_index do |letter, index|    
-    unless (letter =~ /[aeiouy]/).nil?
+  letters.each.with_index(1) do |letter, index|    
+    if !(letter =~ /[aeiouy]/).nil?
       key = letter.to_sym
-      vowels[key] = index + 1
+      vowels[key] = index
     end
   end
 
