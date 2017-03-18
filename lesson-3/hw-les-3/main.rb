@@ -41,7 +41,7 @@ class Route
   end
 
   def delete_station (station)
-    @stations.delete(station) if !([@stations.first, @stations.last].include? station)
+    @stations.delete(station) if ![@stations.first, @stations.last].include?(station)
   end
 
   #For testing purposes
@@ -78,11 +78,11 @@ class Train
   end
 
   def add_car
-    @car_quantity +=1
+    @car_quantity +=1 if @speed == 0
   end
 
   def detach_car
-    @car_quantity -=1 if @car_quantity > 0
+    @car_quantity -=1 if @car_quantity > 0 && @speed == 0
   end    
 
   def change_route(route)
@@ -95,42 +95,34 @@ class Train
   end
 
   def move_forward
-    if is_not_last?
+    if !(self.next_station.nil?)
       @route_position += 1 
-      @chosen_route.stations[@route_position].train_arrival(self)
-      @chosen_route.stations[@route_position-1].train_departure(self)
+      self.current_station.train_arrival(self)
+      self.previous_station.train_departure(self)
     end
   end
 
   def move_backward
-    if @route_position > 0
+    if !(self.previous_station.nil?)
       @route_position -= 1 
-      @chosen_route.stations[@route_position].train_arrival(self)
-      @chosen_route.stations[@route_position-1].train_departure(self)
+      self.current_station.train_arrival(self)
+      self.next_station.train_departure(self)
     end
   end
 
-def previous_station  
-  @chosen_route.stations[@route_position-1] if @route_position > 0    
-end
+  def previous_station  
+    @chosen_route.stations[@route_position-1] if @route_position > 0    
+  end
 
-def current_station
-  @chosen_route.stations[@route_position] 
-end
+  def current_station
+    @chosen_route.stations[@route_position] 
+  end
 
-def next_station
-  @chosen_route.stations[@route_position+1] if is_not_last?  
-end
-
-  def show_station_neighbors
-    @neighbors = []
-    @neighbors << @chosen_route.stations[@route_position-1] if @route_position != 0    
-    @neighbors << @chosen_route.stations[@route_position]
-    @neighbors << @chosen_route.stations[@route_position+1] if @route_position != @chosen_route.stations.length-1    
-    @neighbors
+  def next_station
+    @chosen_route.stations[@route_position+1] if is_not_last?  
   end  
-  
 end
+
 
 #Initialize objects
 station1 = Station.new("Aleksandrovskaya1")
@@ -186,7 +178,7 @@ puts route1.stations
 puts "Currently there are #{stations_on_route} on the #{route1.name}"
 route1.delete_station(station3)
 puts route1.stations
-stations_on_route.delete(station3.name) if !([stations_on_route.first, stations_on_route.last].include? station3.name)
+stations_on_route.delete(station3.name) if ![stations_on_route.first, stations_on_route.last].include? (station3.name)
 puts "Currently there are #{stations_on_route} on the #{route1.name}"
 route1.add_station(station4)
 puts route1.stations
@@ -230,6 +222,12 @@ puts train1.next_station
 puts "There is no next station" if train1.next_station.nil?
 puts
 train1.move_forward
+train1.move_forward
+puts train1.previous_station
+puts train1.current_station
+puts train1.next_station
+puts "There is no next station" if train1.next_station.nil?
+puts
 train1.move_forward
 puts train1.previous_station
 puts train1.current_station
