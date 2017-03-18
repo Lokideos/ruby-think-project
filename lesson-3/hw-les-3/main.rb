@@ -14,12 +14,12 @@ class Station
     @trains
   end
 
-  def show_trains_by_type (train_type)    
+  def trains_by_type (train_type)    
     @trains.select {|train| train.type == train_type}    
   end
 
-  def train_departure(train_to_departure)
-    @trains.delete_if {|train| train_to_departure == train}     
+  def train_departure(train)
+    @trains.delete (train) {"There is no such train."}
   end
 end
 
@@ -37,11 +37,11 @@ class Route
   end
 
   def add_station(station)    
-    @stations.insert(1, station)
+    @stations.insert(-2, station)
   end
 
-  def delete_station (station_to_del)
-    @stations.delete_if {|station| station == station_to_del}  
+  def delete_station (station)
+    @stations.delete(station) if !([@stations.first, @stations.last].include? station)
   end
 
   #For testing purposes
@@ -82,7 +82,7 @@ class Train
   end
 
   def detach_car
-    @car_quantity -=1
+    @car_quantity -=1 if @car_quantity > 0
   end    
 
   def change_route(route)
@@ -90,17 +90,37 @@ class Train
     @route_position = 0    
   end
 
+  def is_not_last?
+    @route_position < @chosen_route.stations.length-1
+  end
+
   def move_forward
-    @route_position += 1 if @route_position < @chosen_route.stations.length-1
-    @chosen_route.stations[@route_position].train_arrival(self)
-    @chosen_route.stations[@route_position-1].train_departure(self)
+    if is_not_last?
+      @route_position += 1 
+      @chosen_route.stations[@route_position].train_arrival(self)
+      @chosen_route.stations[@route_position-1].train_departure(self)
+    end
   end
 
   def move_backward
-    @route_position -= 1 if @route_position > 0
-    @chosen_route.stations[@route_position].train_arrival(self)
-    @chosen_route.stations[@route_position-1].train_departure(self)
+    if @route_position > 0
+      @route_position -= 1 
+      @chosen_route.stations[@route_position].train_arrival(self)
+      @chosen_route.stations[@route_position-1].train_departure(self)
+    end
   end
+
+def previous_station  
+  @chosen_route.stations[@route_position-1] if @route_position > 0    
+end
+
+def current_station
+  @chosen_route.stations[@route_position] 
+end
+
+def next_station
+  @chosen_route.stations[@route_position+1] if is_not_last?  
+end
 
   def show_station_neighbors
     @neighbors = []
@@ -141,17 +161,17 @@ station1.train_arrival(train3)
 trains_on_station << station1.show_trains.last.number
 puts "Currently there are several trains on the #{station1.name}: #{trains_on_station}"
 station1.train_departure(train1)
-trains_on_station.delete_if {|train| train1.number == train}
+trains_on_station.delete(train1.number)
 puts "Currently there are several trains on the #{station1.name}: #{trains_on_station}"
 station1.train_arrival(train4)
 trains_on_station << station1.show_trains.last.number
 puts "Currently there are several trains on the #{station1.name}: #{trains_on_station}"
 puts "Passenger trains:"
-arr = station1.show_trains_by_type(:passenger)
+arr = station1.trains_by_type(:passenger)
 arr.each {|train| puts train.number}
 puts
 puts "Cargo trains:"
-arr = station1.show_trains_by_type(:cargo)
+arr = station1.trains_by_type(:cargo)
 arr.each {|train| puts train.number}
 puts
 
@@ -161,16 +181,16 @@ puts Route.show_routes
 puts route1.stations
 puts "Currently there are #{stations_on_route} on the #{route1.name}"
 route1.add_station(station3)
-stations_on_route.insert(1, station3.name)
+stations_on_route.insert(-2, station3.name)
 puts route1.stations
 puts "Currently there are #{stations_on_route} on the #{route1.name}"
 route1.delete_station(station3)
 puts route1.stations
-stations_on_route.delete_if {|station| station == station3.name}
+stations_on_route.delete(station3.name) if !([stations_on_route.first, stations_on_route.last].include? station3.name)
 puts "Currently there are #{stations_on_route} on the #{route1.name}"
 route1.add_station(station4)
 puts route1.stations
-stations_on_route.insert(1, station4.name)
+stations_on_route.insert(-2, station4.name)
 puts "Currently there are #{stations_on_route} on the #{route1.name}"
 puts
 
@@ -188,20 +208,30 @@ puts train1.speed_down
 puts "Current speed is #{train1.speed}"
 train1.change_route(route1)
 
-station_neighbors = []
-train1.show_station_neighbors.each {|station| station_neighbors << station.name}
-puts "There are #{station_neighbors} station neighbors."
-station_neighbors = []
+
+
+puts train1.previous_station
+puts "There is no previous_station" if train1.previous_station.nil?
+puts train1.current_station
+puts train1.next_station
+puts
 train1.move_forward
-train1.show_station_neighbors.each {|station| station_neighbors << station.name}
-puts "There are #{station_neighbors} station neighbors."
-station_neighbors = []
+puts train1.previous_station
+puts "There is no previous_station" if train1.previous_station.nil?
+puts train1.current_station
+puts train1.next_station
+puts "There is no next station" if train1.next_station.nil?
+puts
 train1.move_backward
-train1.show_station_neighbors.each {|station| station_neighbors << station.name}
-puts "There are #{station_neighbors} station neighbors."
-station_neighbors = []
+puts train1.previous_station
+puts "There is no previous_station" if train1.previous_station.nil?
+puts train1.current_station
+puts train1.next_station
+puts "There is no next station" if train1.next_station.nil?
+puts
 train1.move_forward
 train1.move_forward
-train1.show_station_neighbors.each {|station| station_neighbors << station.name}
-puts "There are #{station_neighbors} station neighbors."
-station_neighbors = []
+puts train1.previous_station
+puts train1.current_station
+puts train1.next_station
+puts "There is no next station" if train1.next_station.nil?
