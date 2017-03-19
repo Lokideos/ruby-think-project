@@ -41,7 +41,7 @@ class Route
   end
 
   def delete_station (station)
-    @stations.delete(station) if ![@stations.first, @stations.last].include?(station)
+    @stations.delete(station) unless [@stations.first, @stations.last].include?(station)
   end
 
   #For testing purposes
@@ -56,7 +56,7 @@ class Train
   def initialize(number, type, car_quantity)
     @number = number
     #[:passenger, :cargo].include? type
-    if [:passenger, :cargo].include? type    
+    if [:passenger, :cargo].include?(type)
       @type = type 
     else
       @type = :passenger
@@ -86,40 +86,44 @@ class Train
   end    
 
   def change_route(route)
-    @chosen_route = route
+    @route = route
     @route_position = 0    
   end
 
-  def is_not_last?
-    @route_position < @chosen_route.stations.length-1
+  def last_position?
+    @route_position == @route.stations.length-1
+  end
+
+  def first_position?
+    @route_position == 0
   end
 
   def move_forward
-    if !(self.next_station.nil?)
+    if next_station
       @route_position += 1 
-      self.current_station.train_arrival(self)
-      self.previous_station.train_departure(self)
+      current_station.train_arrival(self)
+      previous_station.train_departure(self)
     end
   end
 
   def move_backward
-    if !(self.previous_station.nil?)
+    if previous_station
       @route_position -= 1 
-      self.current_station.train_arrival(self)
-      self.next_station.train_departure(self)
+      current_station.train_arrival(self)
+      next_station.train_departure(self)
     end
   end
 
   def previous_station  
-    @chosen_route.stations[@route_position-1] if @route_position > 0    
+    @route.stations[@route_position-1] unless first_position?   
   end
 
   def current_station
-    @chosen_route.stations[@route_position] 
+    @route.stations[@route_position] 
   end
 
   def next_station
-    @chosen_route.stations[@route_position+1] if is_not_last?  
+    @route.stations[@route_position+1] unless last_position?  
   end  
 end
 
