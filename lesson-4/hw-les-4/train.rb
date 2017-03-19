@@ -1,16 +1,13 @@
 class Train    
-  attr_reader :number, :type, :speed, :car_quantity
+  attr_reader :number, :speed, :type
+  @@trains=[]
 
-  def initialize(number, type, car_quantity)
-    @number = number
-    #[:passenger, :cargo].include? type
-    if [:passenger, :cargo].include?(type)
-      @type = type 
-    else
-      @type = :passenger
-    end
-    @car_quantity = car_quantity
+  def initialize(number)
+    @type = :default
+    @number = number   
     @speed = 0
+    @cars = []
+    @@trains << self
   end
 
   def speed_up(speed=10)
@@ -25,12 +22,12 @@ class Train
     @speed = 0
   end
 
-  def add_car
-    @car_quantity +=1 if @speed == 0
+  def add_car(car)
+    @cars << car if car.type == @type && speed == 0
   end
 
-  def detach_car
-    @car_quantity -=1 if @car_quantity > 0 && @speed == 0
+  def detach_car(car)
+    @cars.delete(car) if @speed == 0
   end    
 
   def change_route(route)
@@ -73,4 +70,8 @@ class Train
   def next_station
     @route.stations[@route_position+1] unless last_position?  
   end  
+
+  def self.show_trains
+    @@trains
+  end
 end
