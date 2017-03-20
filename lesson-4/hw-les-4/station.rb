@@ -12,7 +12,7 @@ class Station
     @trains << train    
   end
 
-  def show_trains
+  def trains
     @trains
   end
 
@@ -24,8 +24,14 @@ class Station
     @trains.delete (train) {"There is no such train."}
   end
 
-  def self.show_stations
+  def self.stations
     @@stations
+  end
+
+  def self.station_names
+    @@stations.each {|station| print " #{station.name}"}
+    puts
+    puts
   end
 
 end

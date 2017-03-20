@@ -11,6 +11,22 @@ class Route
     @@routes << self 
   end
 
+  def station_names
+    @stations.each {|station| print "#{station.name} "}
+    puts
+    puts
+  end
+
+  def self.routes
+    @@routes
+  end
+
+  def self.route_names
+    @@routes.each {|route| print "#{route.name} "}
+    puts
+    puts
+  end
+
   def add_station(station)    
     @stations.insert(-2, station)
   end
@@ -19,7 +35,4 @@ class Route
     @stations.delete(station) unless [@stations.first, @stations.last].include?(station)
   end
 
-  def self.show_routes
-    @@routes
-  end
 end
