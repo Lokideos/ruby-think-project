@@ -3,19 +3,22 @@ class Route
   
 
   def initialize (first_station, last_station)    
-    @stations = [first_station, last_station] if first_station != last_station  #should be instances of Station class
-    @station_names = [first_station.name, last_station.name]
+    @stations = [first_station, last_station] if first_station != last_station  #should be instances of Station class    
     @name = "route#{object_id}"   
   end
 
   def add_station(station)    
-    @stations.insert(-2, station)
-    @station_names.insert(-2, station.name)
+    @stations.insert(-2, station)    
   end
 
   def delete_station (station)
-    @stations.delete(station) unless [@stations.first, @stations.last].include?(station)
-    @station_names.delete(station.name) unless [@stations.first, @stations.last].include?(station)
+    @stations.delete(station) unless [@stations.first, @stations.last].include?(station)    
+  end
+
+  def stations_names
+    station_names = []
+    @stations.each {|station| station_names << station.name}
+    station_names  
   end
 
 end

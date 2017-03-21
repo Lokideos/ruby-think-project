@@ -21,16 +21,12 @@ class Train
     @speed = 0
   end  
 
-  def add_car(car)
-    if speed == 0
-      @cars << car 
-      car.attached = true      
-    end
+  def add_car(car)    
+    @cars << car if speed == 0
   end
 
   def detach_car(car)
-    @cars.delete(car) if @speed == 0
-    car.attached = false
+    @cars.delete(car) if @speed == 0  
   end 
 
   def change_route(route)
