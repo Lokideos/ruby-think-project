@@ -1,38 +1,21 @@
 class Route
-  @@routes = [] 
-  @@route_name_counter = 0 
-  attr_reader :stations, :name
+  attr_reader :stations, :station_names, :name
   
 
   def initialize (first_station, last_station)    
     @stations = [first_station, last_station] if first_station != last_station  #should be instances of Station class
-    @@route_name_counter +=1 
-    @name = "route#{@@route_name_counter}"
-    @@routes << self 
-  end
-
-  def station_names
-    @stations.each {|station| print "#{station.name} "}
-    puts
-    puts
-  end
-
-  def self.routes
-    @@routes
-  end
-
-  def self.route_names
-    @@routes.each {|route| print "#{route.name} "}
-    puts
-    puts
+    @station_names = [first_station.name, last_station.name]
+    @name = "route#{object_id}"   
   end
 
   def add_station(station)    
     @stations.insert(-2, station)
+    @station_names.insert(-2, station.name)
   end
 
   def delete_station (station)
     @stations.delete(station) unless [@stations.first, @stations.last].include?(station)
+    @station_names.delete(station.name) unless [@stations.first, @stations.last].include?(station)
   end
 
 end

@@ -1,14 +1,12 @@
 class Train    
-  attr_reader :number, :speed, :type, :cars
+  attr_reader :number, :speed, :cars
   attr_accessor :route
-  @@trains=[]
 
-  def initialize(number)
-    @type = :default
+
+  def initialize(number)   
     @number = number   
     @speed = 0
-    @cars = []
-    @@trains << self
+    @cars = []    
   end
 
   def speed_up(speed=10)
@@ -24,13 +22,9 @@ class Train
   end  
 
   def add_car(car)
-    if car.type == @type && speed == 0
-      adding_car = true
-      @cars.each {|car_on_train| adding_car = false if car_on_train.car_id == car.car_id}
-      if adding_car == true
-        @cars << car 
-        car.attached = true
-      end
+    if speed == 0
+      @cars << car 
+      car.attached = true      
     end
   end
 
@@ -79,15 +73,5 @@ class Train
   def next_station
     @route.stations[@route_position+1] unless last_position?  
   end  
-
-  def self.trains
-    @@trains
-  end
-
-  def self.train_numbers
-    @@trains.each {|train| print " #{train.number}"}
-    puts
-    puts
-  end
-
+  
 end

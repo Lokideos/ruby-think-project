@@ -1,11 +1,9 @@
 class Station
   attr_reader :name 
-  @@stations = [] 
 
   def initialize (name)
     @name = name
-    @trains = []
-    @@stations << self
+    @trains = []   
   end
 
   def train_arrival(train)
@@ -17,21 +15,11 @@ class Station
   end
 
   def trains_by_type (train_type)    
-    @trains.select {|train| train.type == train_type}    
+    @trains.select {|train| train.class.to_s == train_type}    
   end
 
   def train_departure(train)
     @trains.delete (train) {"There is no such train."}
-  end
-
-  def self.stations
-    @@stations
-  end
-
-  def self.station_names
-    @@stations.each {|station| print " #{station.name}"}
-    puts
-    puts
   end
 
 end
