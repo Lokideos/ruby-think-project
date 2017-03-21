@@ -17,7 +17,8 @@ class Application
       case user_input
 
       when "trains"
-      #trains_managning_method      
+      #ui ad + input trains managing method
+      #trains_managing_method      
         puts "You are now in the managing trains program section."
         puts "Here you can add new trains, assign route to train, add cars to train, detach them from train."
         puts "Also here you can move your train on the route."
@@ -28,6 +29,8 @@ class Application
         case trains_input
 
         when "add"
+          #trainds add managing method
+          #ui ad + ionput trains add managing method
           print "Currently there are several trains: "; puts trains_numbers; puts
           puts "Do you want to add passenger or cargo train?"
           train_type = gets.chomp.downcase
@@ -315,6 +318,22 @@ class Application
 
   attr_accessor :routes, :stations, :trains, :cars, :cars_free
 
+  #Fill methods
+  def train_menu
+  end
+
+  def station_menu
+  end
+
+  def route_menu
+  end
+
+  def car_menu
+  end
+
+
+  #Change methods below to one methods. Possibly to do so I should change .? on one attrib
+
   def routes_names
     route_names = []
     routes.each {|route| route_names << route.name}    
@@ -344,5 +363,7 @@ class Application
     cars_free.each {|car| cars_free_id << car_free.car_id}
     cars_free_id
   end
+
+
 
 end

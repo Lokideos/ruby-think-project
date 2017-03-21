@@ -8,6 +8,7 @@ require_relative 'car'
 require_relative 'cargo_car'
 require_relative 'passenger_car'
 require_relative 'tests'
+require_relative 'ui'
 require_relative 'application'
 
 #test1 = Tests.new
@@ -17,5 +18,5 @@ puts "Greetings! Welcome to the program, which will help you to maintain your ra
 puts "In this program you can manage your trains, your stations and your routes."
 puts "Now you will be tranfered to the Main Menu."
 
-start = Application.new
-start.run
+program = Application.new
+program.run
