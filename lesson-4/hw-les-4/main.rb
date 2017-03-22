@@ -13,10 +13,8 @@ require_relative 'application'
 
 #test1 = Tests.new
 #test1.run
-
-puts "Greetings! Welcome to the program, which will help you to maintain your railway stations!"
-puts "In this program you can manage your trains, your stations and your routes."
-puts "Now you will be tranfered to the Main Menu."
+program_ui = UI.new
+program_ui.main_ad
 
 program = Application.new
 program.run
