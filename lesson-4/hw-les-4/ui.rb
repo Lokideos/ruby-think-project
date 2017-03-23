@@ -15,22 +15,22 @@ class UI
     @user_input2 = gets.chomp
   end
 
-  def main_ad
+  def main_msg
     puts "Greetings! Welcome to the program, which will help you to maintain your railway stations!"
     puts "In this program you can manage your trains, your stations and your routes."
     puts "Now you will be tranfered to the Main Menu."
   end
 
-  def run_ad
+  def run_msg
     puts "Please type in 'trains' for managing your trains, 'routes' for managing your routes, 'stations' to managing your stations or 'cars' to add or delete cars."
   end
 
-  def run_exit_ad
+  def run_exit_msg
     puts "Please type in 'exit' to exit the program."
   end
 
 
-  def manage_trains_selected_ad
+  def manage_trains_selected_msg
     puts "You are now in the managing trains program section."
     puts "Here you can add new trains, assign route to train, add cars to train, detach them from train."
     puts "Also here you can move your train on the route."
@@ -39,7 +39,7 @@ class UI
     puts "type in 'move' to move train on his route or 'cars' to add or detach car from train."
   end
 
-  def manage_trains_add_selected_trains_show_ad
+  def manage_trains_add_selected_trains_show_msg
     print "Currently there are several trains: "    
   end
 
@@ -51,11 +51,19 @@ class UI
     puts "Please type in number for your train to add."
   end
 
-  def manage_trains_add_train_add_success_ad(train)
+  def manage_trains_add_train_add_success_msg(train)
     puts "You've added #{train.number} train."
   end
 
-  def wrong_input_ad
+  def manage_routes_msg
+    puts "You are now in the managing routes program section."
+    puts "Here you can add new routes and add station to this route or delete them."
+    puts
+    puts "Please type in 'add' to add new route, 'add station' to add station to this route,"
+    puts "or 'delete station' to delete station from this route."
+  end
+
+  def wrong_input_msg
     puts "You've provided wrong type of input. Please try again."
   end
 

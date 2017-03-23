@@ -22,12 +22,16 @@ class Train
   end  
 
   def add_car(car)    
-    @cars << car if speed == 0
+    @cars << car if speed == 0 && correct_car?(car)
   end
 
   def detach_car(car)
     @cars.delete(car) if @speed == 0  
   end 
+
+  def correct_car?(car)
+    car_has_correct_type = true
+  end
 
   def change_route(route)
     @route = route

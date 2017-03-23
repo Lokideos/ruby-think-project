@@ -43,12 +43,11 @@ class Application
 
   #As far as I understand methods below shouldn't be accessible outside of Application class
   #because user shouldn't be able to directly interact with those variables without interacting with UI first.
-  attr_accessor :routes, :stations, :trains, :cars, :cars_free, :ui, :train_to_manage
-
+  attr_accessor :routes, :stations, :trains, :cars, :cars_free, :ui
   
   #Methods below should be accessible only through UI.
   def manage_trains
-    @ui.manage_trains_selected_ad
+    @ui.manage_trains_selected_msg
     @ui.input_1_change
     @ui.user_input1.downcase
 
@@ -62,163 +61,140 @@ class Application
     when "cars"
       manage_trains_cars
     else
-      @ui.wrong_input_ad
+      @ui.wrong_input_msg
     end
   end
 
   def manage_trains_add_train
-    @ui.manage_trains_add_selected_trains_show_ad; puts @ui.trains_numbers(trains); puts
+    @ui.manage_trains_add_selected_trains_show_msg; puts @ui.trains_numbers(trains); puts
     @ui.manage_trains_add_selected_type_train_question    
     @ui.input_1_change
     @ui.user_input1.downcase
     @ui.manage_trains_add_selected_number_train_question    
     @ui.input_2_change
-    @ui.user_input2.downcase
-
-    case @ui.user_input1
-    when "passenger"
-      train = PassengerTrain.new(@ui.user_input2)
-      @trains << train            
-    when "cargo"
-      train = CargoTrain.new(@ui.user_input2)
-      @trains << train            
-    else
-      train = PassengerTrain.new(@ui.user_input2)
-      @trains << train            
-    end    
-    @ui.manage_trains_add_train_add_success_ad(train)    
-    @ui.manage_trains_add_selected_trains_show_ad; puts @ui.trains_numbers(trains); puts   
+    @ui.user_input2.downcase   
+    create_train(@ui.user_input1, @ui.user_input2)     
+    @ui.manage_trains_add_selected_trains_show_msg; puts @ui.trains_numbers(trains); puts   
     puts
   end 
 
-  def manage_trains_add_route
-    acceptable_train = false
-    acceptable_route = false
+  def create_train(train_type, train_number)
+    case train_type
+    when "passenger"
+      train = PassengerTrain.new(train_number)
+      @trains << train            
+    when "cargo"
+      train = CargoTrain.new(train_number)
+      @trains << train            
+    else
+      train = PassengerTrain.new(train_number)
+      @trains << train            
+    end  
+      @ui.manage_trains_add_train_add_success_msg(train) unless train.nil?
+  end
+
+
+  def manage_trains_add_route    
     print "Currently there are several trains: "; puts @ui.trains_numbers(trains); puts
     puts
     print "Currently there are several routes: "; puts @ui.print_names(routes); puts
     puts
     puts "Please type in train number and route name you want to assign to this train."
     puts "Please type in train number:"
-    train_num = gets.chomp
-    trains.each do |train|
-      if train.number == train_num
-        train_num = train
-        acceptable_train = true
-      end
-    end    
+    train_number = gets.chomp     
     puts "Please type in route name:"
-    route_name = gets.chomp
-    routes.each do |route| 
-      if route.name == route_name
-        route_name = route 
-        acceptable_route = true
-      end
-    end
-    if acceptable_route && acceptable_train
-      train_num.change_route(route_name) 
-      puts "Train #{train_num.number} changed his route to #{route_name.name}."
+    route_name = gets.chomp    
+    change_route(train_number, route_name)
+  end
+
+  def change_route(train_num, route_name)    
+    train = trains.find {|train_in_trains| train_in_trains.number == train_num}
+    route = routes.find {|route_in_routes| route_in_routes.name == route_name}
+    
+    if train && route
+      train.change_route(route) 
+      puts "Train #{train.number} changed his route to #{route.name}."
     else
       puts "Unfortunately there is no such train or route."
-    end
+    end   
   end
 
   def manage_trains_move    
-    acceptable_train = false
     puts "Please select train you want to move."
     print "Currently there are several trains: "; puts @ui.trains_numbers(trains); puts
     puts   
     puts "Please type in number of the train you want to move:"
-    train_num = gets.chomp
-    trains.each do |train|
-      if train.number == train_num && train.route
-        train_num = train
-        acceptable_train = true
-      end
-    end
-    if acceptable_train
+    train_number = gets.chomp
+    train_move_on_route(train_number)    
+  end
+
+  def train_move_on_route(train_num)    
+    train = trains.find{|train_in_trains| train_in_trains.number == train_num && train_in_trains.route}
+    if train      
       puts "Type in 'forward' if you want to move your train forward or 'backward' if you want to move your train backward."
       direction = gets.chomp
-      train_num.move_forward if direction == "forward"
-      train_num.move_backward if direction == "backward"
+      train.move_forward if direction == "forward"
+      train.move_backward if direction == "backward"
     end
   end
 
-  def manage_trains_cars
-    acceptable_train = false
+  def manage_trains_cars    
     puts "Please select train you want to operate with."
     print "Currently there are several trains: "; puts @ui.trains_numbers(trains); puts           
     puts "Please type in number of the train you want to operate with:"
-    self.train_to_manage = gets.chomp
-    trains.each do |train|
-      if train.number == train_to_manage
-        self.train_to_manage = train
-        acceptable_train = true
-      end
-    end
-    if acceptable_train
+    train_to_manage_number = gets.chomp
+    add_correct_car(train_to_manage_number)    
+  end
+
+  def add_correct_car(train_num)
+    train = trains.find{|train_in_trains| train_in_trains.number == train_num}
+    if train      
       puts "Type in 'add' to add the car to the train or 'detach' to detach it."
       action = gets.chomp
 
       case action
       when "add"      
-        manage_trains_cars_add        
+        manage_trains_cars_add(train)        
       when "detach"
-        manage_trains_cars_detach        
+        manage_trains_cars_detach(train)     
       else
-        @ui.wrong_input_ad
+        @ui.wrong_input_msg
       end
     end
   end
 
-  def manage_trains_cars_add
-    acceptable_car = false
+  def manage_trains_cars_add(train)    
     puts "Please select car to attach to the train."
     print "Currently there are several cars availible to attaching: "; puts @ui.print_car_ids(cars_free); puts
     puts "Please type in id of car you want to attach."
-    car_id = gets.chomp
-    cars_free.each do |car|
-      if car.car_id == car_id
-        car_id = car
-        acceptable_car = true
-      end
-    end
-    if acceptable_car
-      train_to_manage.add_car(car_id)
-      @cars_free.delete(car_id)                
+    car_to_add_id = gets.chomp
+    car = cars_free.find{|car| car.car_id == car_to_add_id}
+    if car      
+      train.add_car(car)
+      @cars_free.delete(car) if train_to_manage.correct_car?(car)
     else
       puts "There is no car with this id number."
     end
   end
 
-  def manage_trains_cars_detach
-    acceptable_car = false
+  def manage_trains_cars_detach(train)    
     puts "Please select car you want to detach."
     print "Currently there are several cars attached to the train: "    
-    train_to_manage.cars.each { |car| print "#{car.car_id} "}    
+    train.cars.each { |car| print "#{car.car_id} "}    
     puts
     puts "Please type in id of car you want to detach."
-    car_id = gets.chomp
-    train_to_manage.cars.each do |car|
-      if car.car_id == car_id
-        car_id = car
-        acceptable_car = true
-      end
-    end
-    if acceptable_car
-      train_to_manage.detach_car(car_id)
-      @cars_free << car_id                              
+    car_to_detach_id = gets.chomp
+    car = cars_free.find{|car| car.car_id == car_to_detach_id}
+    if car      
+      train.detach_car(car)
+      @cars_free << car if train_to_manage.correct_car?(car)                
     else
       puts "There is no such car currently attched to train #{train_to_manage.number}."
     end
   end
 
   def manage_routes
-    puts "You are now in the managing routes program section."
-    puts "Here you can add new routes and add station to this route or delete them."
-    puts
-    puts "Please type in 'add' to add new route, 'add station' to add station to this route,"
-    puts "or 'delete station' to delete station from this route."
+    @ui.manage_routes_msg   
     routes_input = gets.chomp.downcase
 
     case routes_input
@@ -229,67 +205,67 @@ class Application
     when "delete station"
       manage_routes_delete_station
     else
-      @ui.wrong_input_ad
+      @ui.wrong_input_msg
     end
   end
 
-  def manage_routes_add_route    
-    good_route = false
-    good_station1 = false
-    good_station2 = false
+  def manage_routes_add_route       
     print "Currently there are several routes: "; puts @ui.print_names(routes); puts
     print "Currently there are several stations: "; puts @ui.print_names(stations); puts    
     puts "Please type in name of the first station for the new route."
-    first_station = gets.chomp
-    stations.each do |station|
-      if station.name == first_station
-        first_station = station 
-        good_station1 = true
-      end
-    end
+    first_station_name = gets.chomp    
+
     puts "Please type in name of the last station for the new route."    
-    last_staiton = gets.chomp
-    stations.each do |station| 
-      if station.name == last_staiton
-        last_staiton = station 
-        good_station2 = true
-      end
-    end
-    good_route = true unless first_station == last_staiton || good_station1 == false || good_station2 == false
-    if good_route == true
+    last_staiton_name = gets.chomp
+
+    first_station = stations.find{|station| station.name == first_station_name}
+    last_station = stations.find{|station| station.name == last_staiton_name && last_station_name != first_station_name}
+
+    if first_station && last_station      
       route = Route.new(first_station, last_staiton)
       @routes << route            
       puts "New route #{route.name} has been created."
     else
-      puts "Unfortunately route has not been created."
+      puts "Unfortunately route has not been created. There are problems with your station names."
     end
+
     print "Currently there are several routes: "; puts @ui.print_names(routes); puts
   end
 
   def manage_routes_add_station
     print "Currently there are several routes: "; puts @ui.print_names(routes); puts
     puts "Please type in route name you want to add station to."
-    route_name = gets.chomp
-    routes.each {|route| route_name = route if route.name == route_name}
+    route_name = gets.chomp    
     print "Currently there are several stations: "; puts @ui.print_names(stations); puts
     puts "Please type in station name you want to add to this route."
     station_name = gets.chomp
-    stations.each {|station| station_name = station if station.name == station_name}
-    route_name.add_station(station_name)
-    puts "Station #{station_name.name} was successfully added to #{route_name.name}."
+
+    station = stations.find {|station| station.name == station_name}
+    route = routes.find {|route| route.name == route_name}
+
+    if route && station
+      route.add_station(station)
+      puts "Station #{station_name} was successfully added to #{route_name}."
+    else
+      puts "Unfortunately station #{station_name} was not added to route #{route_name}."
   end
 
   def manage_routes_delete_station
     print "Currently there are several routes: "; puts print_names(routes); puts
     puts "Please type in route name you want to delete station from."
-    route_name = gets.chomp
-    routes.each {|route| route_name = route if route.name == route_name}
+    route_name = gets.chomp    
     print "Currently there are several station on route #{route_name.name}: "; puts route_name.stations_names; puts 
     puts "Please type in station name you want to delete."
-    station_name = gets.chomp
-    route_name.stations.each {|station| station_name = station if station.name == station_name}
-    puts "Unfortunately, you are unable to delete first or last station attached to route." if route_name.stations.length < 3
-    route_name.delete_station(station_name)
+    station_name = gets.chomp    
+
+    station = stations.find {|station| station.name == station_name}
+    route = routes.find {|route| route.name == route_name}
+
+    if route && station && route.statoins.length > 2
+      route.delete_station(station)
+    else
+      puts "Unfortunately, you are unable to delete first or last station attached to route or there is no such station or route."
+    end    
     print "Currently there are several station on route #{route_name.name}: "; puts route_name.stations_names; puts
   end
 
@@ -324,14 +300,14 @@ class Application
     print "Currently there are several stations: "; puts @ui.print_names(stations); puts
     puts "Please type in station you want to observe."
     station_name = gets.chomp
-    stations.each do |station| 
-      if station.name == station_name
-        station_name = station
-        print "Currently there are several trains on station #{station_name.name}: "
-        station.trains.each {|train| print "#{train.number} "}
-      end  
-    end
-    puts
+
+    station = stations.find {|station| station.name == station_name}
+
+    if station 
+      print "Currently there are several trains on station #{station_name.name}: "
+      station.trains.each {|train| print "#{train.number} "}
+      puts
+    end    
   end
 
   def manage_stations_list_stations
@@ -356,9 +332,10 @@ class Application
   def manage_cars_add_car
     print "Currently there are several cars: "; puts @ui.print_car_ids(cars); puts
     puts "Do you want to add passenger or cargo car?"
-    puts "Type in 'cargo' to add cargo car or 'passenger' to add passenger car:"
-    car = ""      
+    puts "Type in 'cargo' to add cargo car or 'passenger' to add passenger car:"          
     car_type = gets.chomp
+
+    car = "car exists"
     case car_type
     when "cargo"
       car = CargoCar.new
@@ -375,12 +352,12 @@ class Application
   def manage_cars_remove_car
     print "Currently there are several cars: "; puts @ui.print_car_ids(cars); puts
     puts "Please type in car id of car you want to delete:"
-    car_input = gets.chomp
-    @cars.each do |car| 
-      if car.car_id == car_input
-        @cars.delete(car) 
-        @cars_free.delete(car)             
-      end
-    end
+    car_to_del_id = gets.chomp
+
+    car = cars.find{|car| car.id == car_to_del_id}
+    if car
+      @cars.delete(car)
+      @cars_free.delete(car)
+    end    
   end  
 end

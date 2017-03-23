@@ -14,7 +14,7 @@ require_relative 'application'
 #test1 = Tests.new
 #test1.run
 program_ui = UI.new
-program_ui.main_ad
+program_ui.main_msg
 
 program = Application.new
 program.run
