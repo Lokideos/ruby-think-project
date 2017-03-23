@@ -15,7 +15,7 @@ class Application
     exit_program = "start"
     until exit_program == "exit"
       #UI
-      @ui.run_ad
+      @ui.run_msg
       @ui.input_1_change
       @ui.user_input1.downcase
 
@@ -29,10 +29,10 @@ class Application
       when "cars"
         manage_cars        
       else
-        @ui.wrong_input_ad
+        @ui.wrong_input_msg
       end
 
-      @ui.run_exit_ad
+      @ui.run_exit_msg
       exit_program = gets.chomp.downcase
     end
 
@@ -248,6 +248,7 @@ class Application
       puts "Station #{station_name} was successfully added to #{route_name}."
     else
       puts "Unfortunately station #{station_name} was not added to route #{route_name}."
+    end
   end
 
   def manage_routes_delete_station
@@ -359,5 +360,6 @@ class Application
       @cars.delete(car)
       @cars_free.delete(car)
     end    
-  end  
+  end
+
 end
