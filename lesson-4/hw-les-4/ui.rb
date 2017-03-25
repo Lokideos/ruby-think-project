@@ -39,6 +39,14 @@ class UI
     puts "type in 'move' to move train on his route or 'cars' to add or detach car from train."
   end
 
+  def manage_trains_add_route_msg(trains, routes)
+    print "Currently there are several trains: "; puts trains_numbers(trains); puts
+    puts
+    print "Currently there are several routes: "; puts print_names(routes); puts
+    puts
+    puts "Please type in train number and route name you want to assign to this train."
+  end
+
   def manage_trains_add_selected_trains_show_msg
     print "Currently there are several trains: "    
   end

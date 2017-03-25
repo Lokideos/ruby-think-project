@@ -1,12 +1,19 @@
 class Train    
+
+  include Manufacturable 
   attr_reader :number, :speed, :cars
   attr_accessor :route
+  @@trains_class = []
 
+  def self.find(train_number)    
+    train = @@trains_class.find {|train_in_trains_class| train_in_trains_class.number == train_number}
+  end
 
   def initialize(number)   
     @number = number   
     @speed = 0
     @cars = []    
+    @@trains_class << self    
   end
 
   def speed_up(speed=10)

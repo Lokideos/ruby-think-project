@@ -79,27 +79,27 @@ class Application
   end 
 
   def create_train(train_type, train_number)
-    case train_type
-    when "passenger"
-      train = PassengerTrain.new(train_number)
-      @trains << train            
-    when "cargo"
-      train = CargoTrain.new(train_number)
-      @trains << train            
+    unless @trains.find {|train_in_trains| train_in_trains.number == train_number}
+      case train_type
+      when "passenger"
+        train = PassengerTrain.new(train_number)
+        @trains << train            
+      when "cargo"
+        train = CargoTrain.new(train_number)
+        @trains << train            
+      else
+        train = PassengerTrain.new(train_number)
+        @trains << train            
+      end  
     else
-      train = PassengerTrain.new(train_number)
-      @trains << train            
-    end  
+      puts "Unfortunately train with this number already exists."
+    end
       @ui.manage_trains_add_train_add_success_msg(train) unless train.nil?
   end
 
 
-  def manage_trains_add_route    
-    print "Currently there are several trains: "; puts @ui.trains_numbers(trains); puts
-    puts
-    print "Currently there are several routes: "; puts @ui.print_names(routes); puts
-    puts
-    puts "Please type in train number and route name you want to assign to this train."
+  def manage_trains_add_route   
+    @ui.manage_trains_add_route_msg(trains, routes)    
     puts "Please type in train number:"
     train_number = gets.chomp     
     puts "Please type in route name:"

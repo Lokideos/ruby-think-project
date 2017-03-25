@@ -1,9 +1,13 @@
 class Station
+
+  include Manufacturable  
   attr_reader :name 
+  @@stations_class = []
 
   def initialize (name)
     @name = name
     @trains = []   
+    @@stations_class << self
   end
 
   def train_arrival(train)
@@ -20,6 +24,10 @@ class Station
 
   def train_departure(train)
     @trains.delete (train) {"There is no such train."}
+  end
+
+  def self.all
+    @@stations_class
   end
 
 end
