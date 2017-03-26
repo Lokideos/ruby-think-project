@@ -61,7 +61,7 @@ class Application
     when "cars"
       manage_trains_cars
     when "inst"
-      puts PassengerTrain.instance
+      puts PassengerTrain.instance_counter
     else
       @ui.wrong_input_msg
     end

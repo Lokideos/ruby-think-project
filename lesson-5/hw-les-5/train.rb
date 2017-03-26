@@ -1,13 +1,10 @@
 class Train    
-
   include Manufacturable 
-  include InstanceCounter
-  inheritable_attributes :instance
-  instances_to_zero
+  include InstanceCounter  
 
   attr_reader :number, :speed, :cars
   attr_accessor :route
-  @@instances = {}    
+  @@instances = {}
 
   def self.find(train_number)    
     @@instances[train_number.to_sym]
@@ -19,7 +16,7 @@ class Train
     @cars = []    
     @@instances[@number.to_sym] = self
     @manufacture = "Toshiba"   
-    register_instance 
+    register_instance     
   end
 
   def speed_up(speed=10)

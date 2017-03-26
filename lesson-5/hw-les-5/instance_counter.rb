@@ -5,41 +5,23 @@ module InstanceCounter
   end
 
   module ClassMethods
-    attr_accessor :instance
+    attr_accessor :instance_counter
 
-    def instances_to_zero
-      self.instance = 0    
-    end
-
-    def add_instance
-      self.instance += 1
-    end
-
-    def inheritable_attributes(*args)
-      @inheritable_attributes ||= [:inheritable_attributes]
-      @inheritable_attributes += args
-      args.each do |arg|
-        class_eval %(
-        class << self; attr_accessor :#{arg} end
-        )
-      end
-      @inheritable_attributes
-    end
-
-    def inherited(subclass)
-      @inheritable_attributes.each do |inheritable_attribute|
-        instance_var = "@#{inheritable_attribute}"
-        subclass.instance_variable_set(instance_var, instance_variable_get(instance_var))
-      end
-    end
   end
+
+  @instance_counter = 0    
 
   module InstanceMethods
 
     protected 
 
     def register_instance
-      self.class.add_instance
+      if self.class.instance_counter
+        self.class.instance_counter += 1
+      else
+        self.class.instance_counter = 1
+      end
     end    
+    
   end
 end

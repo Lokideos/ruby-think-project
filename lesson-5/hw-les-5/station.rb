@@ -1,17 +1,14 @@
 class Station
-
-  include InstanceCounter
-  inheritable_attributes :instance
-  instances_to_zero
+  include InstanceCounter  
 
   attr_reader :name 
-  @@instances = {}
+  @@instances = []
 
   def initialize (name)
     @name = name
     @trains = []   
-    @@instances[name.to_sym] = self
-    register_instance 
+    @@instances << self
+    register_instance
   end
 
   def train_arrival(train)

@@ -138,23 +138,23 @@ class Tests
 
   def test_instances_and_stations
     puts "Trains"    
-    puts Train.instance
+    puts Train.instance_counter
     Train.new("t1")
-    puts Train.instance
+    puts Train.instance_counter
     Train.new("t2")
-    puts Train.instance
+    puts Train.instance_counter
     Train.new("t3")
-    puts Train.instance
+    puts Train.instance_counter
     puts Train.find("t3")
     puts Train.find("t3").manufacture    
     puts
     
     puts "Stations"
-    puts Station.instance
+    puts Station.instance_counter
     Station.new("s1")
-    puts Station.instance
+    puts Station.instance_counter
     Station.new("s2")
-    puts Station.instance
+    puts Station.instance_counter
     puts Station.all
     
   end
