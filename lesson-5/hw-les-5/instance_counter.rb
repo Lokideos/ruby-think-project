@@ -8,11 +8,29 @@ module InstanceCounter
     attr_accessor :instance
 
     def instances_to_zero
-      @instance = 0    
+      self.instance = 0    
     end
 
     def add_instance
-      @instance += 1
+      self.instance += 1
+    end
+
+    def inheritable_attributes(*args)
+      @inheritable_attributes ||= [:inheritable_attributes]
+      @inheritable_attributes += args
+      args.each do |arg|
+        class_eval %(
+        class << self; attr_accessor :#{arg} end
+        )
+      end
+      @inheritable_attributes
+    end
+
+    def inherited(subclass)
+      @inheritable_attributes.each do |inheritable_attribute|
+        instance_var = "@#{inheritable_attribute}"
+        subclass.instance_variable_set(instance_var, instance_variable_get(instance_var))
+      end
     end
   end
 

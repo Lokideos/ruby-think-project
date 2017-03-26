@@ -60,6 +60,8 @@ class Application
       manage_trains_move
     when "cars"
       manage_trains_cars
+    when "inst"
+      puts PassengerTrain.instance
     else
       @ui.wrong_input_msg
     end

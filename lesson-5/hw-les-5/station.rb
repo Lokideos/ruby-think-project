@@ -1,6 +1,7 @@
 class Station
 
   include InstanceCounter
+  inheritable_attributes :instance
   instances_to_zero
 
   attr_reader :name 
@@ -10,7 +11,7 @@ class Station
     @name = name
     @trains = []   
     @@instances[name.to_sym] = self
-    self.register_instance 
+    register_instance 
   end
 
   def train_arrival(train)

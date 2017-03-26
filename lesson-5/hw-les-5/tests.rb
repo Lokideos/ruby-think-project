@@ -146,7 +146,7 @@ class Tests
     Train.new("t3")
     puts Train.instance
     puts Train.find("t3")
-    puts Train.find("t3").manufacture
+    puts Train.find("t3").manufacture    
     puts
     
     puts "Stations"
@@ -162,4 +162,4 @@ end
 
 test1 = Tests.new
 
-test1.test_instances_and_stations
+#test1.test_instances_and_stations
