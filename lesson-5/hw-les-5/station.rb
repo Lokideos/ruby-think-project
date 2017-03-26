@@ -1,13 +1,16 @@
 class Station
 
-  include Manufacturable  
+  include InstanceCounter
+  instances_to_zero
+
   attr_reader :name 
-  @@stations_class = []
+  @@instances = {}
 
   def initialize (name)
     @name = name
     @trains = []   
-    @@stations_class << self
+    @@instances[name.to_sym] = self
+    self.register_instance 
   end
 
   def train_arrival(train)
@@ -27,7 +30,7 @@ class Station
   end
 
   def self.all
-    @@stations_class
+    @@instances
   end
 
 end

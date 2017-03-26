@@ -5,14 +5,14 @@ module InstanceCounter
   end
 
   module ClassMethods
-    @@instances = 0
+    attr_accessor :instance
 
-    def instances
-      @@instances      
+    def instances_to_zero
+      @instance = 0    
     end
 
     def add_instance
-      @@instances += 1
+      @instance += 1
     end
   end
 

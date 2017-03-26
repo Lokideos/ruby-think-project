@@ -71,6 +71,12 @@ class UI
     puts "or 'delete station' to delete station from this route."
   end
 
+  def manage_trains_move_msg(trains)
+    puts "Please select train you want to move."
+    print "Currently there are several trains: "; puts trains_numbers(trains); puts
+    puts   
+  end
+
   def wrong_input_msg
     puts "You've provided wrong type of input. Please try again."
   end

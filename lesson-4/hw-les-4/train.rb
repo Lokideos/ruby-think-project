@@ -2,10 +2,11 @@ class Train
 
   include Manufacturable 
   include InstanceCounter  
+  instances_to_zero
 
   attr_reader :number, :speed, :cars
   attr_accessor :route
-  @@instances = {}
+  @@instances = {}  
 
   def self.find(train_number)    
     @@instances[train_number.to_sym]

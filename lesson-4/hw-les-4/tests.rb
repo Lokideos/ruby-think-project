@@ -137,17 +137,26 @@ class Tests
   end
 
   def test_instances_and_stations
+    puts "Trains"    
+    puts Train.instance
     Train.new("t1")
+    puts Train.instance
     Train.new("t2")
+    puts Train.instance
     Train.new("t3")
-    Train.new("t4")
-    Train.new("t5")
-    Station.new("s1")
-    Station.new("s2")
-    puts Station.all
+    puts Train.instance
+    puts Train.find("t3")
     puts Train.find("t3").manufacture
-    #5.times {Train.new("t1")}    
-    puts Train.instances
+    puts
+    
+    puts "Stations"
+    puts Station.instance
+    Station.new("s1")
+    puts Station.instance
+    Station.new("s2")
+    puts Station.instance
+    puts Station.all
+    
   end
 end
 

@@ -1,5 +1,8 @@
 class Station
 
+  include InstanceCounter
+  instances_to_zero
+
   attr_reader :name 
   @@instances = {}
 
@@ -7,6 +10,7 @@ class Station
     @name = name
     @trains = []   
     @@instances[name.to_sym] = self
+    self.register_instance 
   end
 
   def train_arrival(train)
