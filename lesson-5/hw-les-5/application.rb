@@ -173,7 +173,11 @@ class Application
     car = cars_free.find{|car| car.car_id == car_to_add_id}
     if car      
       train.add_car(car)
-      @cars_free.delete(car) if train_to_manage.correct_car?(car)
+      if train.send :correct_car?, car
+        @cars_free.delete(car) 
+      else
+        puts "Unfortunately car's type and train's type are different."
+      end
     else
       puts "There is no car with this id number."
     end
@@ -189,9 +193,9 @@ class Application
     car = cars_free.find{|car| car.car_id == car_to_detach_id}
     if car      
       train.detach_car(car)
-      @cars_free << car if train_to_manage.correct_car?(car)                
+      @cars_free << car if train.correct_car?(car)                
     else
-      puts "There is no such car currently attched to train #{train_to_manage.number}."
+      puts "There is no such car currently attched to train #{train.number}."
     end
   end
 
