@@ -1,19 +1,23 @@
 class Train    
 
   include Manufacturable 
+  include InstanceCounter  
+
   attr_reader :number, :speed, :cars
   attr_accessor :route
-  @@trains_class = []
+  @@instances = {}
 
   def self.find(train_number)    
-    train = @@trains_class.find {|train_in_trains_class| train_in_trains_class.number == train_number}
+    @@instances[train_number.to_sym]
   end
 
   def initialize(number)   
     @number = number   
     @speed = 0
     @cars = []    
-    @@trains_class << self    
+    @@instances[@number.to_sym] = self
+    @manufacture = "Toshiba"
+    self.register_instance    
   end
 
   def speed_up(speed=10)

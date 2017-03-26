@@ -1,8 +1,12 @@
+require_relative 'manufacturable.rb'
+require_relative 'instance_counter.rb'
+require_relative 'train.rb'
+require_relative 'station.rb'
+
 #Tests
 class Tests
 #Test new train-car related methods
-
-
+  
   def run
     station1 = Station.new("Station1")
     station2 = Station.new("Station2")
@@ -132,4 +136,21 @@ class Tests
     puts "There is no next station" if train1.next_station.nil?
   end
 
+  def test_instances_and_stations
+    Train.new("t1")
+    Train.new("t2")
+    Train.new("t3")
+    Train.new("t4")
+    Train.new("t5")
+    Station.new("s1")
+    Station.new("s2")
+    puts Station.all
+    puts Train.find("t3").manufacture
+    #5.times {Train.new("t1")}    
+    puts Train.instances
+  end
 end
+
+test1 = Tests.new
+
+test1.test_instances_and_stations

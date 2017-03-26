@@ -79,7 +79,7 @@ class Application
   end 
 
   def create_train(train_type, train_number)
-    unless @trains.find {|train_in_trains| train_in_trains.number == train_number}
+    unless @trains.find {|train_in_trains| train_in_trains.number == train_number && train_number == ""}
       case train_type
       when "passenger"
         train = PassengerTrain.new(train_number)
@@ -120,9 +120,7 @@ class Application
   end
 
   def manage_trains_move    
-    puts "Please select train you want to move."
-    print "Currently there are several trains: "; puts @ui.trains_numbers(trains); puts
-    puts   
+    @ui.manage_trains_move_msg(trains)    
     puts "Please type in number of the train you want to move:"
     train_number = gets.chomp
     train_move_on_route(train_number)    
@@ -135,6 +133,8 @@ class Application
       direction = gets.chomp
       train.move_forward if direction == "forward"
       train.move_backward if direction == "backward"
+    else
+      puts "Unfortunately train with this number does not exists."
     end
   end
 
