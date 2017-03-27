@@ -16,7 +16,7 @@ class Train
     @cars = []    
     @@instances[@number.to_sym] = self
     @manufacture = "Toshiba"   
-    register_instance     
+    register_instance         
   end
 
   def speed_up(speed=10)

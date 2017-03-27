@@ -16,22 +16,29 @@ class Application
     until exit_program == "exit"
       #UI
       @ui.run_msg
-      @ui.input_1_change
-      @ui.user_input1.downcase
-
-      case @ui.user_input1
-      when "trains"
-        manage_trains    
-      when "routes"
-        manage_routes
-      when "stations"
-        manage_stations
-      when "cars"
-        manage_cars        
-      else
-        @ui.wrong_input_msg
+      attempt = 0
+      begin
+        @ui.input_1_change
+        @ui.user_input1.downcase
+      raise "There is no such option in the main menu." unless @ui.user_input1 == "trains" || @ui.user_input1 == "routes" || @ui.user_input1 == "stations" || @ui.user_input1 == "cars"
+        case @ui.user_input1
+        when "trains"
+          manage_trains    
+        when "routes"
+          manage_routes
+        when "stations"
+          manage_stations
+        when "cars"
+          manage_cars                
+        end
+      rescue RuntimeError => e
+        attempt += 1
+        puts e.inspect
+        if attempt < 4
+          @ui.wrong_input_msg
+          retry
+        end
       end
-
       @ui.run_exit_msg
       exit_program = gets.chomp.downcase
     end
@@ -60,7 +67,7 @@ class Application
       manage_trains_move
     when "cars"
       manage_trains_cars
-    when "inst"
+    when "inst" #Test method for printing value of instance_counter (task form hw-5)
       puts PassengerTrain.instance_counter
     else
       @ui.wrong_input_msg
@@ -68,20 +75,28 @@ class Application
   end
 
   def manage_trains_add_train
-    @ui.manage_trains_add_selected_trains_show_msg; puts @ui.trains_numbers(trains); puts
-    @ui.manage_trains_add_selected_type_train_question    
-    @ui.input_1_change
-    @ui.user_input1.downcase
-    @ui.manage_trains_add_selected_number_train_question    
-    @ui.input_2_change
-    @ui.user_input2.downcase   
-    create_train(@ui.user_input1, @ui.user_input2)     
-    @ui.manage_trains_add_selected_trains_show_msg; puts @ui.trains_numbers(trains); puts   
+    attempt = 0
+    begin
+      @ui.manage_trains_add_selected_trains_show_msg(trains)    
+      train_type = gets.chomp.downcase
+      train_number = gets.chomp
+    raise "Unacceptable train number!" unless /^[\d\w]{3}-*[\d\w]{2}$/.match(train_number)
+    raise "Unacceptable train type!" unless train_type == "passenger" || train_type == "cargo"
+      create_train(train_type, train_number)   
+    rescue RuntimeError => e
+      attempt += 1
+      puts e.inspect
+      if attempt < 4
+        @ui.wrong_input_msg        
+        retry
+      end
+      raise "You've provided wrong type of input. Bad luck."
+    end          
     puts
   end 
 
-  def create_train(train_type, train_number)
-    unless @trains.find {|train_in_trains| train_in_trains.number == train_number && train_number == ""}
+  def create_train(train_type, train_number)    
+    unless @trains.find {|train_in_trains| train_in_trains.number == train_number}
       case train_type
       when "passenger"
         train = PassengerTrain.new(train_number)
@@ -94,9 +109,9 @@ class Application
         @trains << train            
       end  
     else
-      puts "Unfortunately train with this number already exists."
+      @ui.create_train_failed_msg
     end
-      @ui.manage_trains_add_train_add_success_msg(train) unless train.nil?
+    @ui.manage_trains_add_train_add_success_msg(train) unless train.nil?         
   end
 
 
@@ -217,63 +232,84 @@ class Application
 
   def manage_routes_add_route       
     print "Currently there are several routes: "; puts @ui.print_names(routes); puts
-    print "Currently there are several stations: "; puts @ui.print_names(stations); puts    
-    puts "Please type in name of the first station for the new route."
-    first_station_name = gets.chomp    
-
-    puts "Please type in name of the last station for the new route."    
-    last_staiton_name = gets.chomp
-
-    first_station = stations.find{|station| station.name == first_station_name}
-    last_station = stations.find{|station| station.name == last_staiton_name && last_station_name != first_station_name}
-
-    if first_station && last_station      
+    print "Currently there are several stations: "; puts @ui.print_names(stations); puts  
+    attempt = 0
+    begin  
+      puts "Please type in name of the first station for the new route."
+      first_station_name = gets.chomp    
+    raise "Unexisting first station" unless stations.find{|station|station.name == first_station_name}
+      puts "Please type in name of the last station for the new route."    
+      last_staiton_name = gets.chomp
+    raise "Unexisting second station" unless stations.find{|station| station.name == last_staiton_name}
+    raise "First station are equal to last station" if first_station_name == last_staiton_name
+      first_station = stations.find{|station|station.name == first_station_name}
+      last_staiton = stations.find{|station| station.name == last_staiton_name}
       route = Route.new(first_station, last_staiton)
       @routes << route            
-      puts "New route #{route.name} has been created."
-    else
-      puts "Unfortunately route has not been created. There are problems with your station names."
-    end
-
-    print "Currently there are several routes: "; puts @ui.print_names(routes); puts
+      puts "New route #{route.name} has been sucessfully created."
+    rescue RuntimeError => e
+      puts e.inspect
+      attempt += 1
+      if attempt < 4
+        puts @ui.wrong_input_msg
+        retry
+      end
+    end        
   end
 
-  def manage_routes_add_station
+  def manage_routes_add_station    
     print "Currently there are several routes: "; puts @ui.print_names(routes); puts
-    puts "Please type in route name you want to add station to."
-    route_name = gets.chomp    
     print "Currently there are several stations: "; puts @ui.print_names(stations); puts
-    puts "Please type in station name you want to add to this route."
-    station_name = gets.chomp
-
-    station = stations.find {|station| station.name == station_name}
-    route = routes.find {|route| route.name == route_name}
-
-    if route && station
+    attempt = 0
+    begin
+      puts "Please type in route name you want to add station to."
+      route_name = gets.chomp
+    raise "Unexisting route" unless routes.find{|route| route.name == route_name}
+      puts "Please type in station name you want to add to this route."
+      station_name = gets.chomp
+    raise "Unexisting station" unless stations.find{|station| station.name == station_name}
+      station = stations.find {|station| station.name == station_name}
+      route = routes.find {|route| route.name == route_name}    
       route.add_station(station)
-      puts "Station #{station_name} was successfully added to #{route_name}."
-    else
-      puts "Unfortunately station #{station_name} was not added to route #{route_name}."
+      puts "Station #{station.name} was successfully added to #{route.name}."
+    rescue RuntimeError => e
+      puts e.inspect
+      attempt += 1
+      if attempt < 4
+        puts @ui.wrong_input_msg
+        retry
+      end
     end
   end
 
   def manage_routes_delete_station
-    print "Currently there are several routes: "; puts print_names(routes); puts
-    puts "Please type in route name you want to delete station from."
-    route_name = gets.chomp    
-    print "Currently there are several station on route #{route_name.name}: "; puts route_name.stations_names; puts 
-    puts "Please type in station name you want to delete."
-    station_name = gets.chomp    
-
-    station = stations.find {|station| station.name == station_name}
-    route = routes.find {|route| route.name == route_name}
-
-    if route && station && route.statoins.length > 2
+    print "Currently there are several routes: "; puts @ui.print_names(routes); puts
+    print "Currently there are several stations: "; puts @ui.print_names(stations); puts
+    attempt = 0
+    begin
+      puts "Please type in route name you want to delete station from."
+      route_name = gets.chomp        
+    raise "Unexisting route" unless routes.find{|route| route.name == route_name}
+      route = routes.find {|route| route.name == route_name}
+    raise "Too short route" if route.stations.length < 2
+      print "Currently there are several stations on route #{route.name}: "; puts route.stations_names; puts 
+      puts "Please type in station name you want to delete."
+      station_name = gets.chomp    
+    raise "Unexisting station" unless route.stations.find{|station| station.name == station_name}
+    raise "First station can not be deleted" if station_name == route.stations.first
+    raise "Last station can not be deleted" if station_name == route.stations.last
+      station = stations.find {|station| station.name == station_name}      
       route.delete_station(station)
-    else
-      puts "Unfortunately, you are unable to delete first or last station attached to route or there is no such station or route."
+      puts "Station #{station.name} has been succesfully removed from route #{route.name}."
+    rescue RuntimeError => e
+      puts e.inspect
+      attempt += 1
+      if attempt < 4
+        puts @ui.wrong_input_msg
+        retry
+      end    
     end    
-    print "Currently there are several station on route #{route_name.name}: "; puts route_name.stations_names; puts
+    
   end
 
   def manage_stations
@@ -294,13 +330,25 @@ class Application
     end
   end
 
-  def manage_stations_add_station
+  def manage_stations_add_station    
+    attempt = 0
     print "Currently there are several stations: "; puts @ui.print_names(stations); puts    
-    puts "Please type in name for your new station"
-    station_name = gets.chomp
-    station = Station.new(station_name)
-    @stations << station          
-    print "Currently there are several stations: "; puts @ui.print_names(stations); puts
+    begin
+      puts "Please type in name for your new station"
+      station_name = gets.chomp
+    raise "Station already exists" if stations.find{|station| station.name == station_name}
+    raise "Unacceptable station name" if station_name.length == 0
+      station = Station.new(station_name)
+      @stations << station          
+      puts "Station #{station.name} has been succesfully added."
+    rescue RuntimeError => e
+      puts e.inspect
+      attempt += 1
+      if attempt < 4
+        puts @ui.wrong_input_msg
+        retry
+      end
+    end      
   end
 
   def manage_stations_observe_station    
@@ -339,33 +387,50 @@ class Application
   def manage_cars_add_car
     print "Currently there are several cars: "; puts @ui.print_car_ids(cars); puts
     puts "Do you want to add passenger or cargo car?"
-    puts "Type in 'cargo' to add cargo car or 'passenger' to add passenger car:"          
-    car_type = gets.chomp
-
-    car = "car exists"
-    case car_type
-    when "cargo"
-      car = CargoCar.new
-    when "passenger"
-      car = PassengerCar.new
-    else 
-      car = PassengerCar.new
+    attempt = 0
+    begin
+      puts "Type in 'cargo' to add cargo car or 'passenger' to add passenger car:"          
+      car_type = gets.chomp
+    raise "Unexisting car type" if car_type != "cargo" && car_type!= "passenger"
+      car = "car exists"
+      case car_type
+      when "cargo"
+        car = CargoCar.new
+      when "passenger"
+        car = PassengerCar.new      
+      end
+      @cars << car
+      @cars_free << car         
+      puts "#{car.class.to_s.capitalize} car #{car.object_id} was succesfully added."
+    rescue RuntimeError => e
+      puts e.inspect
+      attempt += 1
+      if attempt < 4         
+        @ui.wrong_input_msg
+        retry
+      end
     end
-    @cars << car
-    @cars_free << car         
-    puts "#{car.class.to_s.capitalize} car #{car.object_id} was succesfully added."
   end
 
   def manage_cars_remove_car
     print "Currently there are several cars: "; puts @ui.print_car_ids(cars); puts
-    puts "Please type in car id of car you want to delete:"
-    car_to_del_id = gets.chomp
-
-    car = cars.find{|car| car.id == car_to_del_id}
-    if car
+    attempt = 0
+    begin
+      puts "Please type in car id of car you want to delete:"
+      car_to_del_id = gets.chomp
+    raise "Unexisting car" unless cars.find{|car| car.car_id == car_to_del_id}
+      car = cars.find{|car| car.car_id == car_to_del_id}    
       @cars.delete(car)
       @cars_free.delete(car)
-    end    
+      puts "Car was sucessfully deleted."
+    rescue RuntimeError => e
+      puts e.inspect
+      attempt += 1
+      if attempt < 4
+        @ui.wrong_input_msg
+        retry
+      end
+    end
   end
 
 end

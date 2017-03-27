@@ -47,16 +47,14 @@ class UI
     puts "Please type in train number and route name you want to assign to this train."
   end
 
-  def manage_trains_add_selected_trains_show_msg
-    print "Currently there are several trains: "    
+  def manage_trains_add_selected_trains_show_msg(trains)
+    print "Currently there are several trains: "; puts trains_numbers(trains); puts
+    puts "Please type in train's type and train number in the respectful order."    
+    puts "Train's type should be 'passenger' or 'cargo'"
   end
 
-  def manage_trains_add_selected_type_train_question
-    puts "Do you want to add passenger or cargo train?"
-  end
-
-  def manage_trains_add_selected_number_train_question
-    puts "Please type in number for your train to add."
+  def create_train_failed_msg
+    puts "Unfortunately train with this number already exists."
   end
 
   def manage_trains_add_train_add_success_msg(train)
@@ -79,6 +77,7 @@ class UI
 
   def wrong_input_msg
     puts "You've provided wrong type of input. Please try again."
+    puts
   end
 
   def print_names (objects)
