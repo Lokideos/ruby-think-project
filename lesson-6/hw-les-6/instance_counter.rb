@@ -9,8 +9,6 @@ module InstanceCounter
 
   end
 
-  @instance_counter = 0    
-
   module InstanceMethods
 
     protected 
