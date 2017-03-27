@@ -391,7 +391,7 @@ class Application
     begin
       puts "Type in 'cargo' to add cargo car or 'passenger' to add passenger car:"          
       car_type = gets.chomp
-    raise "Unexisting car type" if car_type != "cargo" && car_type!= "passenger"
+    raise "Unexisting car type" unless car_type == "cargo" || car_type == "passenger"
       car = "car exists"
       case car_type
       when "cargo"
@@ -433,4 +433,8 @@ class Application
     end
   end
 
+  def valid?()
+    valid_object = true
+
+  end
 end
