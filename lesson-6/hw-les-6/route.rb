@@ -2,8 +2,9 @@ class Route
   attr_reader :stations, :station_names, :name
   
 
-  def initialize (first_station, last_station)    
-    @stations = [first_station, last_station] if first_station != last_station  #should be instances of Station class    
+  def initialize (first_station, last_station) 
+  raise unless valid?(:routes, "d", "d", first_station, last_staiton)   
+    @stations = [first_station, last_station] #should be instances of Station class    
     @name = "route#{object_id}"   
   end
 

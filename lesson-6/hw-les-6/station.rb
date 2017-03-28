@@ -1,10 +1,12 @@
 class Station
   include InstanceCounter  
+  include Validable
 
-  attr_reader :name 
+  attr_reader :name
   @@instances = []
 
   def initialize (name)
+    raise unless valid?(:stations, "d", "d", "d", "d", name)
     @name = name
     @trains = []   
     @@instances << self
