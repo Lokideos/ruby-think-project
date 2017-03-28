@@ -44,7 +44,7 @@ class UI
     puts
     print "Currently there are several routes: "; puts print_names(routes); puts
     puts
-    puts "Please type in train number and route name you want to assign to this train."
+    puts "Please type in train number and route name you want to assign to this train in the respectful order:"
   end
 
   def manage_trains_add_selected_trains_show_msg(trains)
@@ -73,6 +73,171 @@ class UI
     puts "Please select train you want to move."
     print "Currently there are several trains: "; puts trains_numbers(trains); puts
     puts   
+    puts "Please type in number of the train you want to move:"
+  end
+
+  def change_route_good_route_msg(train, route)
+    puts "Train #{train.number} changed his route to #{route.name}."
+  end
+
+  def change_route_bad_route_msg
+    puts "Unfortunately there is no such train or route."
+  end
+
+  def train_move_on_route_direction_msg
+    puts "Type in 'forward' if you want to move your train forward or 'backward' if you want to move your train backward."
+  end
+
+  def train_move_on_route_bad_msg
+    puts "Unfortunately train with this number does not exists." 
+  end
+
+  def manage_trains_cars_msg(trains)
+    puts "Please select train you want to operate with."
+    print "Currently there are several trains: "; puts trains_numbers(trains); puts           
+    puts "Please type in number of the train you want to operate with:"
+  end
+
+  def add_correct_car_action_msg
+    puts "Type in 'add' to add the car to the train or 'detach' to detach it."
+  end
+
+  def manage_trains_cars_add_msg(cars_free)
+    puts "Please select car to attach to the train."
+    print "Currently there are several cars availible to attaching: "; puts print_car_ids(cars_free); puts
+    puts "Please type in id of car you want to attach."
+  end
+
+  def manage_trains_cars_add_type_mismatch_msg
+    puts "Unfortunately car's type and train's type are different."
+  end
+
+  def manage_trains_cars_add_existance_car_error_msg(train)
+    puts "There is no such car currently attched to train #{train.number}."
+  end
+
+  def manage_trains_cars_add_success_msg(train, car)
+    puts "Car #{car.car_id} was successfully added to train #{train.number}."
+  end
+
+  def manage_trains_cars_add_error_msg
+    puts "There is no car with this id number."
+  end
+
+  def manage_trains_cars_detach_msg(train)
+    puts "Please select car you want to detach."
+    print "Currently there are several cars attached to the train: "    
+    train.cars.each { |car| print "#{car.car_id} "}    
+    puts
+    puts "Please type in id of car you want to detach."
+  end
+
+  def manage_trains_cars_detach_success_msg(train, car)
+    puts "Car #{car.car_id} was successfully detached from train #{train.number}."
+  end
+
+  def manage_routes_add_route_msg (routes, stations)
+    print "Currently there are several routes: "; puts print_names(routes); puts
+    print "Currently there are several stations: "; puts print_names(stations); puts  
+  end
+
+  def manage_routes_add_route_input_msg
+    puts "Please type in name of the first and last stations for the new route in the respectful order:"    
+  end
+
+  def manage_routes_add_route_success_msg(route)
+    puts "New route #{route.name} has been sucessfully created."
+  end
+
+  def manage_routes_add_station_msg(routes, stations)
+    print "Currently there are several routes: "; puts print_names(routes); puts
+    print "Currently there are several stations: "; puts print_names(stations); puts
+  end
+
+  def manage_routes_add_station_input_msg
+    puts "Please type in route name you want to add station to and station name you want to add to the route."
+    puts "Pleae do so in the respectful order:"
+  end
+
+  def manage_routes_add_station_success_msg(station, route)
+    puts "Station #{station.name} was successfully added to #{route.name}."
+  end 
+
+  def manage_routes_delete_station_msg(routes, stations)
+    print "Currently there are several routes: "; puts print_names(routes); puts
+    print "Currently there are several stations: "; puts print_names(stations); puts  
+  end
+
+  def manage_routes_delete_station_input_route_msg
+    puts "Please type in route name you want to delete station from."    
+  end
+
+  def manage_routes_delete_station_input_station_msg(route)
+    print "Currently there are several stations on route #{route.name}: "; puts route.stations_names; puts 
+    puts "Please type in station name you want to delete."
+  end
+
+  def manage_routes_delete_station_success_msg(station, route)
+    puts "Station #{station.name} has been succesfully removed from route #{route.name}."
+  end
+
+  def manage_stations_msg
+    puts "Your are now in the managing stations program section."
+    puts "Here you can add new stations or observe trains which are currently arrived on this station."
+    puts "Please type in 'add' to add new station 'observe' to observe trains on station or 'list' to view list of existing stations."
+  end
+
+  def manage_stations_add_station_msg(stations)
+    print "Currently there are several stations: "; puts print_names(stations); puts
+  end
+
+  def manage_stations_add_station_input_msg
+    puts "Please type in name for your new station"
+  end
+
+  def manage_stations_add_station_success_msg(station)
+    puts "Station #{station.name} has been succesfully added."
+  end
+
+  def manage_stations_observe_station_msg(stations)
+    print "Currently there are several stations: "; puts print_names(stations); puts
+    puts "Please type in station you want to observe."
+  end
+
+  def manage_stations_observe_station_observe_msg(station)
+    print "Currently there are several trains on station #{station_name.name}: "
+    station.trains.each {|train| print "#{train.number} "}
+    puts
+  end
+
+  def manage_cars_msg
+    puts "Here you can manage your cars by addding new cars or deleting cars."
+    puts "Please type in 'add' to add cars or 'remove' to remove cars:"
+  end
+
+  def manage_cars_add_car_msg(cars)
+    print "Currently there are several cars: "; puts print_car_ids(cars); puts
+    puts "Do you want to add passenger or cargo car?"
+  end
+
+  def manage_cars_add_car_input_msg
+    puts "Type in 'cargo' to add cargo car or 'passenger' to add passenger car:" 
+  end
+
+  def manage_cars_add_car_success_msg(car)
+    puts "#{car.class.to_s.capitalize} car #{car.object_id} was succesfully added."
+  end
+
+  def manage_cars_remove_car_msg(cars)
+    print "Currently there are several cars: "; puts print_car_ids(cars); puts 
+  end
+
+  def manage_cars_remove_car_input_msg
+    puts "Please type in car id of car you want to delete:"
+  end
+
+  def manage_cars_remove_car_success_msg
+    puts "Car was sucessfully deleted."
   end
 
   def wrong_input_msg
