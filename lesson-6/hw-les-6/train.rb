@@ -1,7 +1,6 @@
 class Train    
   include Manufacturable 
-  include InstanceCounter  
-  include Validable
+  include InstanceCounter   
 
   attr_reader :number, :speed, :cars
   attr_accessor :route
@@ -11,8 +10,8 @@ class Train
     @@instances[train_number.to_sym]
   end
 
-  def initialize(number, type = "cargo")  
-  raise unless valid?(:trains, type , number)    
+  def initialize(number, type)  
+  raise unless valid?(number, type) 
     @number = number   
     @speed = 0
     @cars = []    
@@ -86,4 +85,12 @@ class Train
     @route.stations[@route_position+1] unless last_position?  
   end  
   
+  private
+
+  def valid?(train_number, train_type)  
+  raise "Unacceptable train number!" unless /^[\d\w]{3}-*[\d\w]{2}$/.match(train_number)
+  raise "Unacceptable train type!" unless train_type == "passenger" || train_type == "cargo"
+    true     
+  end
+
 end

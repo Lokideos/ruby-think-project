@@ -1,12 +1,11 @@
 class Station
-  include InstanceCounter  
-  include Validable
+  include InstanceCounter    
 
   attr_reader :name
   @@instances = []
 
   def initialize (name)
-  raise unless valid?(:stations, "d", "d", "d", "d", name)
+  raise unless valid?(name)
     @name = name
     @trains = []   
     @@instances << self
@@ -31,6 +30,14 @@ class Station
 
   def self.all
     @@instances
+  end
+
+  private
+
+  def valid?(station_name)  
+  raise "Station already exists" if Station.all.find{|station| station.name == station_name}
+  raise "Unacceptable station name" if station_name.length == 0
+    true
   end
 
 end

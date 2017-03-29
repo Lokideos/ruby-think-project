@@ -1,7 +1,5 @@
 class Application
 
-  include Validable
-
   def initialize    
     self.routes = []    
     self.stations = []    
@@ -82,7 +80,8 @@ class Application
     train_type = gets.chomp.downcase
     train_number = gets.chomp    
     create_train(train_type, train_number)    
-    rescue RuntimeError
+    rescue RuntimeError => e
+        puts e.inspect
         @attempt += 1
       if @attempt < 3
         @ui.wrong_input_msg
@@ -222,13 +221,14 @@ class Application
     @ui.manage_routes_add_route_msg(routes, stations)       
     @ui.manage_routes_add_route_input_msg      
     first_station_name = gets.chomp              
-    last_staiton_name = gets.chomp      
+    last_station_name = gets.chomp      
     first_station = stations.find{|station|station.name == first_station_name}
-    last_staiton = stations.find{|station| station.name == last_staiton_name}
-    route = Route.new(first_station, last_staiton)
+    last_station = stations.find{|station| station.name == last_station_name}
+    route = Route.new(first_station, last_station)
     @routes << route            
     @ui.manage_routes_add_route_success_msg(route)
-  rescue RuntimeError => e      
+  rescue RuntimeError => e 
+    puts e.inspect     
     @attempt += 1
     if @attempt < 3
       puts @ui.wrong_input_msg
@@ -310,7 +310,8 @@ class Application
     station = Station.new(station_name)
     @stations << station          
     @ui.manage_stations_add_station_success_msg(station)
-  rescue RuntimeError    
+  rescue RuntimeError => e
+    puts e.inspect
     @attempt += 1
     if @attempt < 3
       puts @ui.wrong_input_msg
@@ -365,7 +366,7 @@ class Application
   rescue RuntimeError => e
     puts e.inspect
     @attempt += 1
-    if @attempt < 4         
+    if @attempt < 3        
       @ui.wrong_input_msg
       retry
     end
@@ -378,7 +379,7 @@ class Application
     begin
       @ui.manage_cars_remove_car_input_msg      
       car_to_del_id = gets.chomp
-    raise unless valid?(:car_remove, "d", "d", "d", "d", car_to_del_id)
+    raise "Unexisting car" unless cars.find{|car| car.car_id == car_to_del_id}
       car = cars.find{|car| car.car_id == car_to_del_id}    
       @cars.delete(car)
       @cars_free.delete(car)
