@@ -1,5 +1,7 @@
 class Application
 
+  include Validable
+
   def initialize    
     self.routes = []    
     self.stations = []    
@@ -75,21 +77,18 @@ class Application
     end
   end
 
-  def manage_trains_add_train    
-    begin  
-      @ui.manage_trains_add_selected_trains_show_msg(trains)    
-      train_type = gets.chomp.downcase
-      train_number = gets.chomp
-    raise unless valid?(:trains, train_type, train_number)
-      create_train(train_type, train_number) 
+  def manage_trains_add_train        
+    @ui.manage_trains_add_selected_trains_show_msg(trains)    
+    train_type = gets.chomp.downcase
+    train_number = gets.chomp    
+    create_train(train_type, train_number)    
     rescue RuntimeError
         @attempt += 1
       if @attempt < 3
         @ui.wrong_input_msg
         retry        
-      end
-    end
-    @attempt = 0    
+      end    
+    @attempt = 0   
   end 
 
   def create_train(train_type, train_number)
@@ -97,20 +96,19 @@ class Application
     unless @trains.find {|train_in_trains| train_in_trains.number == train_number}
       case train_type
       when "passenger"
-        train = PassengerTrain.new(train_number)
+        train = PassengerTrain.new(train_number, train_type)
         @trains << train            
       when "cargo"
-        train = CargoTrain.new(train_number)
+        train = CargoTrain.new(train_number, train_type)
         @trains << train            
       else
-        train = PassengerTrain.new(train_number)
+        train = PassengerTrain.new(train_number, train_type)
         @trains << train            
       end  
     else
       @ui.create_train_failed_msg
     end
-    @ui.manage_trains_add_train_add_success_msg(train) unless train.nil?         
-  
+    @ui.manage_trains_add_train_add_success_msg(train) unless train.nil?    
   end
 
 
@@ -350,28 +348,28 @@ class Application
 
   def manage_cars_add_car    
     @ui.manage_cars_add_car_msg(cars)
-    begin
-      @ui.manage_cars_add_car_input_msg         
-      car_type = gets.chomp
-    raise unless valid?(:car_add, car_type)
-      car = "car exists"
-      case car_type
-      when "cargo"
-        car = CargoCar.new
-      when "passenger"
-        car = PassengerCar.new      
-      end
-      @cars << car
-      @cars_free << car         
-      @ui.manage_cars_add_car_success_msg(car)
-    rescue RuntimeError => e
-      puts e.inspect
-      @attempt += 1
-      if @attempt < 4         
-        @ui.wrong_input_msg
-        retry
-      end
+    @ui.manage_cars_add_car_input_msg         
+    car_type = gets.chomp
+    car = "car exists"
+    case car_type
+    when "cargo"
+      car = CargoCar.new(car_type)
+    when "passenger"
+      car = PassengerCar.new(car_type)    
+    else
+      car = CargoCar.new(car_type) 
     end
+    @cars << car
+    @cars_free << car         
+    @ui.manage_cars_add_car_success_msg(car)
+  rescue RuntimeError => e
+    puts e.inspect
+    @attempt += 1
+    if @attempt < 4         
+      @ui.wrong_input_msg
+      retry
+    end
+    
     @attempt = 0
   end
 
@@ -395,59 +393,5 @@ class Application
     end
     @attempt = 0
   end
-
-  # def valid?(check_type, train_cargo_type="default", train_number="default", first_station_name="default", 
-  #             last_staiton_name="default", station_name="default", car_managed_id = "default") 
-  #   valid = false
-  #   case check_type
-  #   when :trains
-  #     begin
-  #     raise "Unacceptable train number!" unless /^[\d\w]{3}-*[\d\w]{2}$/.match(train_number)
-  #     raise "Unacceptable train type!" unless train_cargo_type == "passenger" || train_cargo_type == "cargo"
-  #       valid = true 
-  #     rescue RuntimeError => e     
-  #       puts e.inspect        
-  #     end
-  #   when :routes
-  #     begin
-  #     raise "Unexisting first station" unless stations.find{|station|station.name == first_station_name}
-  #     raise "Unexisting second station" unless stations.find{|station| station.name == last_staiton_name}
-  #     raise "First station are equal to last station" if first_station_name == last_staiton_name
-  #       valid = true 
-  #     rescue RuntimeError => e
-  #       puts e.inspect
-  #     end
-  #   when :stations
-  #     begin
-  #     raise "Station already exists" if stations.find{|station| station.name == station_name}
-  #     raise "Unacceptable station name" if station_name.length == 0
-  #       valid = true 
-  #     rescue RuntimeError => e
-  #       puts e.inspect
-  #     end
-  #   when :car_add
-  #     begin
-  #     raise "Unexisting car type" unless train_cargo_type == "cargo" || train_cargo_type == "passenger"
-  #       valid = true 
-  #     rescue RuntimeError => e
-  #       puts e.inspect
-  #     end
-  #   when :car_remove
-  #     begin  
-  #     raise "Unexisting car" unless cars.find{|car| car.car_id == car_managed_id}
-  #       valid = true 
-  #     rescue RuntimeError => e
-  #       puts e.inspect
-  #     end
-  #   else
-  #     begin
-  #     raise "Unexisting data class. How did you end up here btw?"
-  #       valid = true 
-  #     rescue RuntimeError => e
-  #       puts e.inspect
-  #     end
-  #   end
-  #   valid
-  # end
 
 end

@@ -1,7 +1,7 @@
 module Validable
 
-  def valid?(check_type, train_cargo_type="default", train_number="default", first_station_name="default", 
-                last_staiton_name="default", station_name="default", car_managed_id = "default") 
+  def valid?(check_type, train_cargo_type="default", train_number="default", first_station="default", 
+                last_staiton="default", station_name="default", car_managed_id = "default") 
       valid = false
       check_type
       case check_type
@@ -14,10 +14,10 @@ module Validable
           puts e.inspect        
         end
       when :routes
-        begin
-        # raise "Unexisting first station" unless stations.find{|station|station.name == first_station_name}
-        # raise "Unexisting second station" unless stations.find{|station| station.name == last_staiton_name}
-        raise "First station are equal to last station" if first_station_name == last_staiton_name
+        begin        
+        raise "Unexisting first station" unless Station.all.find{|station|station.name == first_station.name}
+        raise "Unexisting second station" unless Station.all.find{|station| station.name == last_staiton.name}
+        raise "First station are equal to last station" if first_station.name == last_staiton.name
           valid = true 
         rescue RuntimeError => e
           puts e.inspect

@@ -6,7 +6,7 @@ class Station
   @@instances = []
 
   def initialize (name)
-    raise unless valid?(:stations, "d", "d", "d", "d", name)
+  raise unless valid?(:stations, "d", "d", "d", "d", name)
     @name = name
     @trains = []   
     @@instances << self

@@ -11,7 +11,8 @@ class Train
     @@instances[train_number.to_sym]
   end
 
-  def initialize(number)   
+  def initialize(number, type = "cargo")  
+  raise unless valid?(:trains, type , number)    
     @number = number   
     @speed = 0
     @cars = []    
