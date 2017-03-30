@@ -25,7 +25,7 @@ class Route
     valid = true  
     valid = false unless Station.all.find{|station| station == self.stations.first}
     valid = false unless Station.all.find{|station| station == self.stations.last}
-    valid = false if self.stations.first.name == self.stations.last.name
+    valid = false if self.stations.first == self.stations.last
     valid
   end
 

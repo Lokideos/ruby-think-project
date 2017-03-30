@@ -85,7 +85,7 @@ class Train
     @route.stations[@route_position+1] unless last_position?  
   end   
 
-  def valid?(train_number)  
+  def valid?
     valid = true
     valid = false unless /^[\d\w]{3}-*[\d\w]{2}$/.match(self.number)
     valid = false unless self.is_a?(PassengerTrain) || self.is_a?(CargoTrain)
