@@ -88,7 +88,7 @@ class Train
   def valid?
     validate!
     true
-    rescue
+    rescue RuntimeError
       false
   end
 
