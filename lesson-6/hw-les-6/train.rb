@@ -86,17 +86,17 @@ class Train
   end   
 
   def valid?
-    valid = true
-    valid = false unless /^[\d\w]{3}-*[\d\w]{2}$/.match(self.number)
-    valid = false unless self.is_a?(PassengerTrain) || self.is_a?(CargoTrain)
-    valid
+    validate!
+    true
+    rescue
+      false
   end
 
   private
 
   def validate!
-  raise "Unacceptable train number!" unless /^[\d\w]{3}-*[\d\w]{2}$/.match(self.number)
-  raise "Unacceptable train type!" unless self.is_a?(PassengerTrain) || self.is_a?(CargoTrain)
+    raise "Unacceptable train number!" unless /^[\d\w]{3}-*[\d\w]{2}$/.match(self.number)
+    raise "Unacceptable train type!" unless self.is_a?(PassengerTrain) || self.is_a?(CargoTrain)
   end
 
 end

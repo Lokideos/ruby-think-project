@@ -9,14 +9,15 @@ class Car
   end  
 
   def valid?    
-    valid = true
-    valid = false unless self.is_a?(CargoCar) || self.is_a?(PassengerCar)
-    valid    
+    validate!
+    true
+    rescue
+      false
   end
 
   private
 
   def validate!
-  raise "Unexisting car type" unless self.is_a?(CargoCar) || self.is_a?(PassengerCar)
+    raise "Unexisting car type" unless self.is_a?(CargoCar) || self.is_a?(PassengerCar)
   end
 end

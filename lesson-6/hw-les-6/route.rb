@@ -22,19 +22,18 @@ class Route
   end
 
   def valid? (first_station="default", last_station="default")
-    valid = true  
-    valid = false unless Station.all.find{|station| station == self.stations.first}
-    valid = false unless Station.all.find{|station| station == self.stations.last}
-    valid = false if self.stations.first == self.stations.last
-    valid
+    validate!
+    true
+    rescue
+      false
   end
 
   private
 
   def validate!  
-  raise "Unexisting first station" unless Station.all.find{|station| station == self.stations.first}
-  raise "Unexisting second station" unless Station.all.find{|station| station == self.stations.last}
-  raise "First station are equal to last station" if self.stations.first.name == self.stations.last.name
+    raise "Unexisting first station" unless Station.all.find{|station| station == self.stations.first}
+    raise "Unexisting second station" unless Station.all.find{|station| station == self.stations.last}
+    raise "First station are equal to last station" if self.stations.first.name == self.stations.last.name
   end
 
 end

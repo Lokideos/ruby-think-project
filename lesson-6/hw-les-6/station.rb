@@ -33,17 +33,17 @@ class Station
   end
 
   def valid?
-    valid = true
-    valid = false if Station.all.find{|station| station.name == self.name}
-    valid = false if self.name.length == 0
-    valid
+    validate!
+    true
+    rescue
+      false
   end
 
   private
 
   def validate!
-  raise "Station already exists" if Station.all.find{|station| station.name == self.name}
-  raise "Unacceptable station name" if self.name.length == 0
+    raise "Station already exists" if Station.all.find{|station| station.name == self.name}
+    raise "Unacceptable station name" if self.name.length == 0
   end
 
 end

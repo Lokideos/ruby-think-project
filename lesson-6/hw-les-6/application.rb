@@ -229,14 +229,14 @@ class Application
     route = Route.new(first_station, last_station)
     @routes << route            
     @ui.manage_routes_add_route_success_msg(route)
-  rescue RuntimeError => e 
-    puts e.inspect     
-    @attempt += 1
-    if @attempt < 3
-      puts @ui.wrong_input_msg
-      retry
-    end        
-  @attempt = 0
+    rescue RuntimeError => e 
+      puts e.inspect     
+      @attempt += 1
+      if @attempt < 3
+        puts @ui.wrong_input_msg
+        retry
+      end        
+    @attempt = 0
   end
 
   def manage_routes_add_station
@@ -312,14 +312,14 @@ class Application
     station = Station.new(station_name)
     @stations << station          
     @ui.manage_stations_add_station_success_msg(station)
-  rescue RuntimeError => e
-    puts e.inspect
-    @attempt += 1
-    if @attempt < 3
-      puts @ui.wrong_input_msg
-      retry
-    end  
-  @attempt = 0      
+    rescue RuntimeError => e
+      puts e.inspect
+      @attempt += 1
+      if @attempt < 3
+        puts @ui.wrong_input_msg
+        retry
+      end  
+    @attempt = 0      
   end
 
   def manage_stations_observe_station    
@@ -365,14 +365,13 @@ class Application
     @cars << car
     @cars_free << car         
     @ui.manage_cars_add_car_success_msg(car)
-  rescue RuntimeError => e
-    puts e.inspect
-    @attempt += 1
-    if @attempt < 3        
-      @ui.wrong_input_msg
-      retry
-    end
-    
+    rescue RuntimeError => e
+      puts e.inspect
+      @attempt += 1
+      if @attempt < 3        
+        @ui.wrong_input_msg
+        retry
+      end    
     @attempt = 0
   end
 
