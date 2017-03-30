@@ -10,9 +10,9 @@ class Train
     @@instances[train_number.to_sym]
   end
 
-  def initialize(number, type)  
-  raise unless valid?(number, type) 
+  def initialize(number)    
     @number = number   
+    validate!
     @speed = 0
     @cars = []    
     @@instances[@number.to_sym] = self
@@ -40,8 +40,8 @@ class Train
     @cars.delete(car) if @speed == 0  
   end 
 
-  def correct_car?(car)
-    car_has_correct_type = true
+  def correct_car?(car) #If car calss is unkonwn we can attach it to any type of train
+    true
   end
 
   def change_route(route)
@@ -83,14 +83,20 @@ class Train
 
   def next_station
     @route.stations[@route_position+1] unless last_position?  
-  end  
-  
+  end   
+
+  def valid?(train_number)  
+    valid = true
+    valid = false unless /^[\d\w]{3}-*[\d\w]{2}$/.match(self.number)
+    valid = false unless self.is_a?(PassengerTrain) || self.is_a?(CargoTrain)
+    valid
+  end
+
   private
 
-  def valid?(train_number, train_type)  
-  raise "Unacceptable train number!" unless /^[\d\w]{3}-*[\d\w]{2}$/.match(train_number)
-  raise "Unacceptable train type!" unless train_type == "passenger" || train_type == "cargo"
-    true     
+  def validate!
+  raise "Unacceptable train number!" unless /^[\d\w]{3}-*[\d\w]{2}$/.match(self.number)
+  raise "Unacceptable train type!" unless self.is_a?(PassengerTrain) || self.is_a?(CargoTrain)
   end
 
 end

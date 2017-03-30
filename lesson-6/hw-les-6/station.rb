@@ -4,12 +4,12 @@ class Station
   attr_reader :name
   @@instances = []
 
-  def initialize (name)
-  raise unless valid?(name)
+  def initialize (name)    
     @name = name
+    validate!
     @trains = []   
     @@instances << self
-    register_instance
+    register_instance    
   end
 
   def train_arrival(train)
@@ -32,12 +32,18 @@ class Station
     @@instances
   end
 
+  def valid?
+    valid = true
+    valid = false if Station.all.find{|station| station.name == self.name}
+    valid = false if self.name.length == 0
+    valid
+  end
+
   private
 
-  def valid?(station_name)  
-  raise "Station already exists" if Station.all.find{|station| station.name == station_name}
-  raise "Unacceptable station name" if station_name.length == 0
-    true
+  def validate!
+  raise "Station already exists" if Station.all.find{|station| station.name == self.name}
+  raise "Unacceptable station name" if self.name.length == 0
   end
 
 end

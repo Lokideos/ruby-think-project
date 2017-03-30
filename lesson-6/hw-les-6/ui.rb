@@ -241,8 +241,7 @@ class UI
   end
 
   def wrong_input_msg
-    puts "You've provided wrong type of input. Please try again."
-    puts
+    puts "You've provided wrong type of input. Please try again."   
   end
 
   def print_names (objects)

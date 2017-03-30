@@ -21,7 +21,9 @@ class Application
       begin
         @ui.input_1_change
         @ui.user_input1.downcase
-      raise "There is no such option in the main menu." unless @ui.user_input1 == "trains" || @ui.user_input1 == "routes" || @ui.user_input1 == "stations" || @ui.user_input1 == "cars"
+        unless %w(trains routes stations cars).include? @ui.user_input1
+          raise "There is no such option in the main menu."
+        end        
         case @ui.user_input1
         when "trains"
           manage_trains    
@@ -95,13 +97,13 @@ class Application
     unless @trains.find {|train_in_trains| train_in_trains.number == train_number}
       case train_type
       when "passenger"
-        train = PassengerTrain.new(train_number, train_type)
+        train = PassengerTrain.new(train_number)
         @trains << train            
       when "cargo"
-        train = CargoTrain.new(train_number, train_type)
+        train = CargoTrain.new(train_number)
         @trains << train            
       else
-        train = PassengerTrain.new(train_number, train_type)
+        train = Train.new(train_number)
         @trains << train            
       end  
     else
@@ -354,11 +356,11 @@ class Application
     car = "car exists"
     case car_type
     when "cargo"
-      car = CargoCar.new(car_type)
+      car = CargoCar.new
     when "passenger"
-      car = PassengerCar.new(car_type)    
+      car = PassengerCar.new
     else
-      car = CargoCar.new(car_type) 
+      car = Car.new
     end
     @cars << car
     @cars_free << car         
