@@ -1,11 +1,23 @@
-require_relative 'manufacturable.rb'
-require_relative 'instance_counter.rb'
-require_relative 'train.rb'
-require_relative 'station.rb'
+require_relative 'manufacturable'
+require_relative 'instance_counter'
+require_relative 'validable'
+require_relative 'station'
+require_relative 'route'
+require_relative 'train'
+require_relative 'passenger_train'
+require_relative 'cargo_train'
+require_relative 'car'
+require_relative 'cargo_car'
+require_relative 'passenger_car'
+require_relative 'ui'
+require_relative 'application'
 
 #Tests
 class Tests
 #Test new train-car related methods
+
+  def initialize
+  end
   
   def run
     station1 = Station.new("Station1")
@@ -139,14 +151,14 @@ class Tests
   def test_instances_and_stations
     puts "Trains"    
     puts Train.instance_counter
-    Train.new("t1")
+    CargoTrain.new("t1111")
     puts Train.instance_counter
-    Train.new("t2")
+    CargoTrain.new("t2222")
     puts Train.instance_counter
-    Train.new("t3")
+    CargoTrain.new("t3333")
     puts Train.instance_counter
-    puts Train.find("t3")
-    puts Train.find("t3").manufacture    
+    puts Train.find("t3333")
+    puts Train.find("t3333").manufacture    
     puts
     
     puts "Stations"
@@ -158,8 +170,31 @@ class Tests
     puts Station.all
     
   end
+
+  def block_test
+    puts "Trains"
+    t1 = CargoTrain.new("t11-11")
+    t2 = CargoTrain.new("t22-22")
+    puts "Stations"
+    s1 = Station.new("s1")
+    s2 = Station.new("s2")
+    puts "Cars"
+    c1 = CargoCar.new(50.0)    
+    c2 = CargoCar.new(70)
+    puts "Methods"
+    t1.add_car(c1)
+    t1.add_car(c2)
+    t1.cars_attached_to_train_handler{|param| puts param}
+    s1.train_arrival(t1)
+    s1.train_arrival(t2)
+    s1.trains_on_station_handler{|param| puts param}    
+    s1.trains_on_station_handler{|param| puts "This is another block: #{param}"}
+  end
+
 end
 
 test1 = Tests.new
+
+test1.block_test
 
 #test1.test_instances_and_stations

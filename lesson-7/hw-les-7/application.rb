@@ -70,10 +70,44 @@ class Application
       manage_trains_move
     when "cars"
       manage_trains_cars
+    when "observe"      
+      manage_trains_choose_train
     when "inst" #Test method for printing value of instance_counter (task form hw-5)
       puts PassengerTrain.instance_counter
     else
       @ui.wrong_input_msg
+    end
+  end
+
+  def manage_trains_choose_train    
+    @ui.manage_trains_choose_train_msg(trains)
+    train_number = gets.chomp
+    train = trains.find{|train_in_trains| train_in_trains.number == train_number}
+    if train
+      manage_trains_observe_cargo_train(train) if train.is_a? CargoTrain
+      manage_trains_observe_passenger_train(train) if train.is_a? PassengerTrain
+    else 
+      @ui.wrong_input_msg
+    end
+  end
+
+  def manage_trains_observe_cargo_train(train)
+    puts "To train number #{train.number} currently attached following cars:"
+    train.cars_attached_to_train_handler do |car| 
+      print "Car number: #{car.car_id}; "
+      print "car type is Cargo; "
+      print "occupied space: #{car.volume - car.current_volume}; "
+      puts "free space: #{car.current_volume}."
+    end
+  end
+
+  def manage_trains_observe_passenger_train(train)
+    puts "To train number #{train.number} currently attached following cars:"
+    train.cars_attached_to_train_handler do |car|
+      print "Car number: #{car.car_id}; "
+      print "car type is Passenger; " 
+      print "taken seates: #{car.seats - car.current_seats}; "
+      puts "free seats: #{car.current_seats}"
     end
   end
 
@@ -126,6 +160,7 @@ class Application
     
     if train && route
       train.change_route(route) 
+      route.stations[0].train_arrival(train)
       @ui.change_route_good_route_msg(train, route)
     else
       @ui.change_route_bad_route_msg
@@ -166,7 +201,9 @@ class Application
       when "add"      
         manage_trains_cars_add(train)        
       when "detach"
-        manage_trains_cars_detach(train)     
+        manage_trains_cars_detach(train) 
+      when "occupy"        
+        manage_trains_cars_choose_car(train)    
       else
         @ui.wrong_input_msg
       end
@@ -191,15 +228,38 @@ class Application
   end
 
   def manage_trains_cars_detach(train)    
-    @ui.manage_trains_cars_detach_msg(train)    
+    @ui.cars_attached_to_train_msg(train)    
     car_to_detach_id = gets.chomp
-    car = cars_free.find{|car| car.car_id == car_to_detach_id}
+    car = train.cars.find{|car| car.car_id == car_to_detach_id}
     if car      
       train.detach_car(car)      
       @ui.manage_trains_cars_detach_success_msg(train, car)
-      @cars_free << car if train.correct_car?(car)                
+      @cars_free << car if train.send :correct_car?, car 
     else
-      @ui.manage_trains_cars_add_error_msg(train)
+      @ui.manage_trains_cars_add_error_msg
+    end
+  end
+
+  def manage_trains_cars_choose_car(train)
+    @ui.cars_attached_to_train_msg(train)
+    car_to_occupy_id = gets.chomp
+    car = train.cars.find{|car| car.car_id == car_to_occupy_id}
+    if car
+      manage_trains_cars_occupy(car)    
+    else 
+      @ui.wrong_input_msg
+    end
+  end
+
+  def manage_trains_cars_occupy(car)
+    if car.is_a? CargoCar
+      car.occupy_volume  
+      @ui.manage_trains_occupy_success_cargo_msg(car)
+    elsif car.is_a? PassengerCar
+      car.take_seat
+      @ui.manage_trains_occupy_success_passenger_msg(car)
+    else
+      @ui.wrong_input_msg
     end
   end
 
@@ -300,8 +360,31 @@ class Application
       manage_stations_observe_station
     when "list"
       manage_stations_list_stations      
+    when "trains"
+      manage_stations_choose_station
+      #choose station -> see atttached trains in Number->Type->CarsQuantity format
     else
       @ui.wrong_input_msg
+    end
+  end
+
+  def manage_stations_choose_station
+    @ui.manage_stations_choose_station_msg(stations)
+    station_name = gets.chomp
+    station = stations.find {|station| station.name == station_name}
+    if station
+      manage_stations_observe_trains(station)
+    else
+      @ui.wrong_input_msg
+    end
+  end
+
+  def manage_stations_observe_trains(station)
+    puts "On station named #{station.name} currently arrived several trains:"
+    station.trains_on_station_handler do |train|
+      print "Train number: #{train.number}; "
+      print "train type is #{train.class}; " 
+      puts "attached to train cars: #{train.cars.size}."      
     end
   end
 
@@ -343,11 +426,13 @@ class Application
     when "add"
       manage_cars_add_car      
     when "remove"
-      manage_cars_remove_car      
+      manage_cars_remove_car     
     else
-      puts @ui.wrong_input_msg
+      @ui.wrong_input_msg
     end
   end
+
+  
 
   def manage_cars_add_car    
     @ui.manage_cars_add_car_msg(cars)
@@ -356,11 +441,15 @@ class Application
     car = "car exists"
     case car_type
     when "cargo"
-      car = CargoCar.new
+      @ui.manage_cars_add_car_input_volume_msg
+      volume = gets.chomp.to_f
+      car = CargoCar.new(volume)
     when "passenger"
-      car = PassengerCar.new
+      @ui.manage_cars_add_car_input_seats_msg
+      seats = gets.chomp.to_i
+      car = PassengerCar.new(seats)
     else
-      car = Car.new
+      car = Car.new("false")
     end
     @cars << car
     @cars_free << car         

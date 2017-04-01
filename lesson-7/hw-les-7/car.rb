@@ -2,7 +2,7 @@ class Car
   include Manufacturable  
   attr_reader :car_id  
 
-  def initialize
+  def initialize(attrib)
     validate!
     @car_id = "#{object_id}"
     @manufacture = "Toshiba"
