@@ -1,0 +1,1 @@
+1.upto(5) {|num| puts "#{num}: situp"; puts "#{num}: pushup"; puts "#{num}: chinup"}
