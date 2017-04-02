@@ -4,16 +4,20 @@ class CargoCar < Car
 
   def initialize(volume=100.0)    
     self.volume = volume
-    self.free_volume = volume
+    self.free_volume = volume    
     super
   end
 
   def occupy_volume(volume)
-    self.free_volume -= volume unless self.free_volume < volume
+    self.free_volume -= volume unless self.free_volume - volume < volume    
   end
 
-  def free_up_volume
-    self.free_volume += 1 unless self.free_volume == self.volume
+  def free_up_volume(volume)
+    self.free_volume += volume unless self.free_volume + volume > self.volume    
+  end
+
+  def occupied_volume
+    self.volume - self.free_volume
   end
 
   private

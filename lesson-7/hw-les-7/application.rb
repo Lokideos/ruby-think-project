@@ -96,7 +96,7 @@ class Application
     train.each_car do |car| 
       print "Car number: #{car.car_id}; "
       print "car type is Cargo; "
-      print "occupied space: #{car.volume - car.free_volume}; "
+      print "occupied space: #{car.occupied_volume}; "
       puts "free space: #{car.free_volume}."
     end
   end
@@ -106,7 +106,7 @@ class Application
     train.each_car do |car|
       print "Car number: #{car.car_id}; "
       print "car type is Passenger; " 
-      print "taken seats: #{car.seats - car.free_seats}; "
+      print "taken seats: #{car.occupied_seats}; "
       puts "free seats: #{car.free_seats}"
     end
   end

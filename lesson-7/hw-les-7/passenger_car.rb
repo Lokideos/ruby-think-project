@@ -16,6 +16,10 @@ class PassengerCar < Car
     self.free_seats += 1 unless self.free_seats == self.seats
   end
 
+  def occupied_seats
+    self.seats - self.free_seats
+  end
+
   private
 
   attr_writer :seats, :free_seats
