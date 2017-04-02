@@ -1,24 +1,24 @@
 class CargoCar < Car
 
-  attr_reader :volume, :current_volume
+  attr_reader :volume, :free_volume
 
   def initialize(volume=100.0)    
     self.volume = volume
-    self.current_volume = volume
+    self.free_volume = volume
     super
   end
 
-  def occupy_volume
-    @current_volume -= 1 unless @current_volume == 0
+  def occupy_volume(volume)
+    self.free_volume -= volume unless self.free_volume < volume
   end
 
   def free_up_volume
-    @current_volume += 1 unless @current_volume == self.volume
+    self.free_volume += 1 unless self.free_volume == self.volume
   end
 
   private
 
-  attr_writer :volume, :current_volume
+  attr_writer :volume, :free_volume
 
   def validate!
     super

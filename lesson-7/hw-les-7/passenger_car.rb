@@ -1,24 +1,24 @@
 class PassengerCar < Car
 
-  attr_reader :seats, :current_seats
+  attr_reader :seats, :free_seats
 
   def initialize(seats=30)    
     self.seats = seats    
-    self.current_seats = seats
+    self.free_seats = seats
     super
   end
 
   def take_seat  
-    @current_seats -= 1 unless @current_seats == 0
+    self.free_seats -= 1 unless self.free_seats == 0
   end
 
   def liberate_place # :D
-    @current_seats += 1 unless @surrent_seats == @seats
+    self.free_seats += 1 unless self.free_seats == self.seats
   end
 
   private
 
-  attr_writer :seats, :current_seats
+  attr_writer :seats, :free_seats
 
   def validate!
     super

@@ -37,12 +37,10 @@ class Station
     true
     rescue RuntimeError
       false
-  end
-
-  #Basically block can do anything with given attributes so I've decided to name this block 'trains handler' because
-  #we don't know what it'll do with trains - we only certain about input attributes, all of which in this case are trains.
-  def trains_on_station_handler(&trains_handler)
-    self.trains.each {|train| trains_handler.call(train)}    
+  end  
+  
+  def each_train
+    trains.each {|train| yield(train)}    
   end
 
   private

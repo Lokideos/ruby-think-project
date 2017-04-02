@@ -14,10 +14,7 @@ require_relative 'application'
 
 #Tests
 class Tests
-#Test new train-car related methods
-
-  def initialize
-  end
+#Test new train-car related methods  
   
   def run
     station1 = Station.new("Station1")

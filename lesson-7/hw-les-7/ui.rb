@@ -114,7 +114,8 @@ class UI
   end
 
   def manage_trains_cars_add_existance_car_error_msg(train)
-    puts "There is no such car currently attched to train #{train.number}."
+    puts "Operation of attaching car to train number #{train.number} has failed."
+    puts "You can not attach car with one type to train with another type."
   end
 
   def manage_trains_cars_add_success_msg(train, car)
@@ -141,14 +142,26 @@ class UI
     print "Currently there are several cars: "; puts print_car_ids(cars); puts 
   end
 
+  def manage_trains_cars_choose_car_msg(train)
+    puts "Please select car you want to operate with."
+    print "Currently there are several cars attached to the train: "    
+    train.cars.each { |car| print "#{car.car_id} "}
+    puts
+    puts "Please type in id of needed car:"    
+  end
+
+  def manage_trains_occupy_set_volume_msg
+    puts "Please type in volume needed for your cargo to load in the car:"
+  end
+
   def manage_trains_occupy_success_cargo_msg(car)
     puts "Cargo has been succesfully loaded to car number #{car.car_id}."
-    puts "There're still #{car.current_volume} free space for this car." 
+    puts "There're still #{car.free_volume} free space for this car." 
   end
 
   def manage_trains_occupy_success_passenger_msg(car)
     puts "Passenger has successfully taken the seat on car number #{car.car_id}."
-    puts "There're still #{car.current_seats} free seats on this car."
+    puts "There're still #{car.free_seats} free seats on this car."
   end
 
   def manage_trains_choose_train_msg(trains)

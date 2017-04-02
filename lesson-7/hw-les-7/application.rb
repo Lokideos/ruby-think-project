@@ -93,21 +93,21 @@ class Application
 
   def manage_trains_observe_cargo_train(train)
     puts "To train number #{train.number} currently attached following cars:"
-    train.cars_attached_to_train_handler do |car| 
+    train.each_car do |car| 
       print "Car number: #{car.car_id}; "
       print "car type is Cargo; "
-      print "occupied space: #{car.volume - car.current_volume}; "
-      puts "free space: #{car.current_volume}."
+      print "occupied space: #{car.volume - car.free_volume}; "
+      puts "free space: #{car.free_volume}."
     end
   end
 
   def manage_trains_observe_passenger_train(train)
     puts "To train number #{train.number} currently attached following cars:"
-    train.cars_attached_to_train_handler do |car|
+    train.each_car do |car|
       print "Car number: #{car.car_id}; "
       print "car type is Passenger; " 
-      print "taken seates: #{car.seats - car.current_seats}; "
-      puts "free seats: #{car.current_seats}"
+      print "taken seats: #{car.seats - car.free_seats}; "
+      puts "free seats: #{car.free_seats}"
     end
   end
 
@@ -214,11 +214,11 @@ class Application
     @ui.manage_trains_cars_add_msg(cars_free)    
     car_to_add_id = gets.chomp
     car = cars_free.find{|car| car.car_id == car_to_add_id}
-    if car      
-      train.add_car(car)
-      @ui.manage_trains_cars_add_success_msg(train, car)
+    if car            
       if train.send :correct_car?, car
+        train.add_car(car)
         @cars_free.delete(car) 
+        @ui.manage_trains_cars_add_success_msg(train, car)
       else
         @ui.manage_trains_cars_add_existance_car_error_msg(train)
       end
@@ -241,7 +241,7 @@ class Application
   end
 
   def manage_trains_cars_choose_car(train)
-    @ui.cars_attached_to_train_msg(train)
+    @ui.manage_trains_cars_choose_car_msg(train)
     car_to_occupy_id = gets.chomp
     car = train.cars.find{|car| car.car_id == car_to_occupy_id}
     if car
@@ -253,7 +253,9 @@ class Application
 
   def manage_trains_cars_occupy(car)
     if car.is_a? CargoCar
-      car.occupy_volume  
+      @ui.manage_trains_occupy_set_volume_msg
+      volume = gets.chomp.to_f
+      car.occupy_volume(volume)  
       @ui.manage_trains_occupy_success_cargo_msg(car)
     elsif car.is_a? PassengerCar
       car.take_seat
@@ -381,7 +383,7 @@ class Application
 
   def manage_stations_observe_trains(station)
     puts "On station named #{station.name} currently arrived several trains:"
-    station.trains_on_station_handler do |train|
+    station.each_train do |train|
       print "Train number: #{train.number}; "
       print "train type is #{train.class}; " 
       puts "attached to train cars: #{train.cars.size}."      

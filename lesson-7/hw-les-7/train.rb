@@ -92,8 +92,8 @@ class Train
       false
   end
 
-  def cars_attached_to_train_handler (&cars_handler)
-    self.cars.each {|car| cars_handler.call(car)}
+  def each_car
+    cars.each {|car| yield(car)}
   end
 
   private
