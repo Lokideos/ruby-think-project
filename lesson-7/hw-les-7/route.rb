@@ -24,8 +24,8 @@ class Route
   def valid? (first_station="default", last_station="default")
     validate!
     true
-    rescue RuntimeError
-      false
+  rescue RuntimeError
+    false
   end
 
   private

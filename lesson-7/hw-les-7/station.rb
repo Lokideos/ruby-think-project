@@ -35,8 +35,8 @@ class Station
   def valid?
     validate!
     true
-    rescue RuntimeError
-      false
+  rescue RuntimeError
+    false
   end  
   
   def each_train

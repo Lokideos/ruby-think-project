@@ -307,8 +307,8 @@ class Application
       @ui.manage_routes_add_station_input_msg      
       route_name = gets.chomp      
       station_name = gets.chomp
-    raise "Unexisting route" unless routes.find{|route| route.name == route_name}
-    raise "Unexisting station" unless stations.find{|station| station.name == station_name}
+      raise "Unexisting route" unless routes.find{|route| route.name == route_name}
+      raise "Unexisting station" unless stations.find{|station| station.name == station_name}
       station = stations.find {|station| station.name == station_name}
       route = routes.find {|route| route.name == route_name}    
       route.add_station(station)
@@ -329,14 +329,14 @@ class Application
     begin
       @ui.manage_routes_delete_station_input_route_msg      
       route_name = gets.chomp        
-    raise "Unexisting route" unless routes.find{|route| route.name == route_name}
+      raise "Unexisting route" unless routes.find{|route| route.name == route_name}
       route = routes.find {|route| route.name == route_name}
-    raise "Too short route" if route.stations.length < 2
+      raise "Too short route" if route.stations.length < 2
       @ui.manage_routes_delete_station_input_station_msg(route)      
       station_name = gets.chomp    
-    raise "Unexisting station" unless route.stations.find{|station| station.name == station_name}
-    raise "First station can not be deleted" if station_name == route.stations.first
-    raise "Last station can not be deleted" if station_name == route.stations.last
+      raise "Unexisting station" unless route.stations.find{|station| station.name == station_name}
+      raise "First station can not be deleted" if station_name == route.stations.first
+      raise "Last station can not be deleted" if station_name == route.stations.last
       station = stations.find {|station| station.name == station_name}      
       route.delete_station(station)
       @ui.manage_routes_delete_station_success_msg(station, route)
@@ -471,7 +471,7 @@ class Application
     begin
       @ui.manage_cars_remove_car_input_msg      
       car_to_del_id = gets.chomp
-    raise "Unexisting car" unless cars.find{|car| car.car_id == car_to_del_id}
+      raise "Unexisting car" unless cars.find{|car| car.car_id == car_to_del_id}
       car = cars.find{|car| car.car_id == car_to_del_id}    
       @cars.delete(car)
       @cars_free.delete(car)

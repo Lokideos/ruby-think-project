@@ -11,8 +11,8 @@ class Car
   def valid?    
     validate!
     true
-    rescue RuntimeError
-      false
+  rescue RuntimeError
+    false
   end
 
   private
