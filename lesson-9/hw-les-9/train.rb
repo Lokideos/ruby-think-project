@@ -1,9 +1,12 @@
 class Train
   include Manufacturable
   include InstanceCounter
+  include Validation
 
   attr_reader :number, :speed, :cars
   attr_accessor :route
+
+  validate :number, /^[\d\w]{3}-*[\d\w]{2}$/
 
   class << self
     attr_accessor :instances
@@ -93,25 +96,8 @@ class Train
     @route.stations[@route_position + 1] unless last_position?
   end
 
-  def valid?
-    validate!
-    true
-  rescue RuntimeError
-    false
-  end
-
   def each_car
     cars.each { |car| yield(car) }
   end
-
-  private
-
-  ERRORS =
-    { bad_number: 'Unacceptable train number!',
-      bad_type: 'Unacceptable train type!' }.freeze
-
-  def validate!
-    raise ERRORS[:bad_number] unless /^[\d\w]{3}-*[\d\w]{2}$/ =~ number
-    raise ERRORS[:bad_type] unless is_a?(PassengerTrain) || is_a?(CargoTrain)
-  end
+  
 end

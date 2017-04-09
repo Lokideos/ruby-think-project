@@ -1,7 +1,11 @@
 class Car
   include Manufacturable
+  include Validation
+
   attr_reader :car_id
   alias id car_id
+
+  validate :car_id
 
   def initialize(_attrib)
     validate!
@@ -9,16 +13,4 @@ class Car
     @manufacture = 'Toshiba'
   end
 
-  def valid?
-    validate!
-    true
-  rescue RuntimeError
-    false
-  end
-
-  private
-
-  def validate!
-    raise 'Unexisting car type' unless is_a?(CargoCar) || is_a?(PassengerCar)
-  end
 end

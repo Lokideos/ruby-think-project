@@ -1,7 +1,10 @@
 class Station
   include InstanceCounter
+  include Validation
 
   attr_reader :name, :trains
+
+  validate :name
 
   class << self
     attr_accessor :instances
@@ -16,6 +19,7 @@ class Station
   end
 
   Station.instances = []
+
 
   def initialize(name)
     @name = name
@@ -39,25 +43,7 @@ class Station
     @trains.delete(train) { 'There is no such train.' }
   end
 
-  def valid?
-    validate!
-    true
-  rescue RuntimeError
-    false
-  end
-
   def each_train
     trains.each { |train| yield(train) }
-  end
-
-  private
-
-  ERRORS =
-    { double: 'Station already exists',
-      bad_name: 'Unacceptable station name' }.freeze
-
-  def validate!
-    raise ERRORS[:double] if Station.all.find { |station| station.name == name }
-    raise ERRORS[:bad_name] if name.empty?
   end
 end
