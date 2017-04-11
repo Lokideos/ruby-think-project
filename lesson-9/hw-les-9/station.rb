@@ -4,7 +4,7 @@ class Station
 
   attr_reader :name, :trains
 
-  validate :name
+  validate :name, :presence
 
   class << self
     attr_accessor :instances
@@ -19,7 +19,6 @@ class Station
   end
 
   Station.instances = []
-
 
   def initialize(name)
     @name = name

@@ -1,5 +1,6 @@
 class PassengerCar < Car
   attr_reader :seats, :free_seats
+  include Validation
 
   def initialize(seats = 30)
     self.seats = seats

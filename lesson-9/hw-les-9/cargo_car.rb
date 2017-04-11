@@ -1,5 +1,6 @@
 class CargoCar < Car
   attr_reader :volume, :free_volume
+  include Validation
 
   def initialize(volume = 100.0)
     self.volume = volume

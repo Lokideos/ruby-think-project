@@ -6,8 +6,6 @@ class Train
   attr_reader :number, :speed, :cars
   attr_accessor :route
 
-  validate :number, /^[\d\w]{3}-*[\d\w]{2}$/
-
   class << self
     attr_accessor :instances
 
@@ -99,5 +97,4 @@ class Train
   def each_car
     cars.each { |car| yield(car) }
   end
-  
 end

@@ -332,7 +332,7 @@ class Application
     @attempt = 0
   end
 
-  def manage_routes_add_route_adding
+  def manage_routes_add_route_adding(station_one_name, station_two_name)
     station_one = stations.find { |station| station.name == station_one_name }
     station_two = stations.find { |station| station.name == station_two_name }
     route = Route.new(station_one, station_two)
