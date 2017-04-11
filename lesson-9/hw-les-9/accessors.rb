@@ -23,11 +23,10 @@ module Accessors
     end
 
     def strong_attr_accessor(name, type)
-      var_name = "@#{name}".to_sym
-      var_type = type.to_s
+      var_name = "@#{name}".to_sym      
       define_method(name) { instance_variable_get(var_name) }
       define_method("#{name}=".to_sym) do |value|
-        raise 'Wrong class' unless value.class.to_s.downcase == var_type
+        raise 'Wrong class' unless value.is_a? type
         instance_variable_set(var_name, value)
       end
     end

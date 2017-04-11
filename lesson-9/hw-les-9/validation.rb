@@ -1,5 +1,3 @@
-require 'set'
-
 module Validation
   def self.included(base)
     base.extend ClassMethods
@@ -7,40 +5,15 @@ module Validation
   end
 
   module ClassMethods
-    def validate(name, type, argument = nil)
-      var_type = "validate_#{type}".to_sym
-      # p "Inside validate: #{name}, #{type}, #{argument}"
+
+    attr_reader :validations
+
+    def validate(name, type, argument = nil)    
       @validations ||= {}
       @validations[name] ||= []
-      @validations[name] << var_type
-      create_methods(var_type, argument)
-    end
+      @validations[name] << {type: type, argument: argument}    
+    end   
 
-    def create_methods(var_type, argument)
-      case var_type
-      when :validate_presence
-        define_method(var_type) do |name|
-          name = "@#{name}".to_sym
-          raise 'Value is nil or empty, which is not acceptable' if instance_variable_get(name).nil?
-        end
-
-      when :validate_format
-        define_method(var_type) do |name|
-          name = "@#{name}".to_sym
-          raise 'Format is wrong' unless instance_variable_get(name).to_s =~ argument
-        end
-
-      when :validate_type
-        define_method(var_type) do |name|
-          name = "@#{name}".to_sym
-          raise 'Class of this value is wrong' unless instance_variable_get(name).is_a? argument
-        end
-      end
-    end
-
-    def validations
-      @validations
-    end
   end
 
   module InstanceMethods
@@ -52,15 +25,27 @@ module Validation
     end
 
     def validate!
-      self.class.validations.each do |var, validations|
-        # p "#{var}: #{validations}"
-        value = instance_variable_get("@#{var}")
-        # p "#{value}"
+      self.class.validations.each do |var, validations|        
+        var_name = instance_variable_get("@#{var}".to_sym)     
         validations.each do |validation|
-          # p "#{validation}"
-          send(validation.to_sym, var.to_sym)
+          method_name = "validate_#{validation[:type]}".to_sym                                
+          method_argument = validation[:argument]          
+          send(method_name, var_name, method_argument)
         end
       end
     end
+
+    def validate_presence(name, argument)      
+      raise 'Value is nil or empty, which is not acceptable' if name.nil?
+    end
+
+    def validate_format(name, argument)      
+      raise 'Format is wrong' unless name.to_s =~ argument
+    end
+
+    def validate_type(name, argument)      
+      raise 'Class of this value is wrong' unless name.is_a? argument
+    end
+
   end
 end
