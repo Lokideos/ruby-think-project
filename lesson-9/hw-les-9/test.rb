@@ -19,7 +19,7 @@ class Test
 
   attr_accessor_with_history :a
   strong_attr_accessor :b, String
-  strong_attr_accessor :c, Fixnum
+  strong_attr_accessor :c, Integer
   validate :a, :presence
   validate :a, :format, /[0-9]{1}/
   validate :a, :type, Integer
